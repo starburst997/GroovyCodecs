@@ -64,7 +64,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
             public virtual void genre_list_handler(int num, string name)
             {
-                Console.Write("{0,3:D} {1}\n", num, name);
+                Log.Write("{0,3:D} {1}\n", num, name);
             }
         }
 
@@ -654,7 +654,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 else
                 {
                     lame_version_print(Console.Error);
-                    Console.Write(
+                    Log.Write(
                         "Error: The bitrate specified is out of the valid range for this preset\n" + "\n" +
                         "When using this mode you must enter a value between \"32\" and \"320\"\n" + "\n" +
                         "For further information try: \"%s --preset help\"\n",
@@ -663,7 +663,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
 
             lame_version_print(Console.Error);
-            Console.Write(
+            Log.Write(
                 "Error: You did not enter a valid profile and/or options with --preset\n" + "\n" +
                 "Available profiles are:\n" + "\n" + "   <fast>        medium\n" + "   <fast>        standard\n" +
                 "   <fast>        extreme\n" + "                 insane\n" +
@@ -671,7 +671,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 "                             simply specify a bitrate. For example:\n" +
                 "                             \"--preset 185\" activates this\n" +
                 "                             preset and uses 185 as an average kbps.\n" + "\n");
-            Console.Write(
+            Log.Write(
                 "    Some examples:\n" + "\n" + " or \"%s --preset fast standard <input file> <output file>\"\n" +
                 " or \"%s --preset cbr 192 <input file> <output file>\"\n" +
                 " or \"%s --preset 172 <input file> <output file>\"\n" +
@@ -745,7 +745,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 case 48:
                     return 48000;
                 default:
-                    Console.Write("Illegal resample frequency: %.3f kHz\n", freq);
+                    Log.Write("Illegal resample frequency: %.3f kHz\n", freq);
                     return 0;
             }
         }
@@ -753,7 +753,7 @@ namespace GroovyCodecs.Mp3.Mp3
         private int set_id3_albumart(LameGlobalFlags gfp, string file_name)
         {
             var ret = -1;
-            FileStream fpi = null;
+            Stream fpi = null;
             if (ReferenceEquals(file_name, null))
                 return 0;
 
@@ -780,8 +780,8 @@ namespace GroovyCodecs.Mp3.Mp3
                     }
                     catch (IOException e)
                     {
-                        Console.Write(e.ToString());
-                        Console.Write(e.StackTrace);
+                        Log.Write(e.ToString());
+                        Log.Write(e.StackTrace);
                     }
                 }
             }
@@ -793,16 +793,16 @@ namespace GroovyCodecs.Mp3.Mp3
             switch (ret)
             {
                 case 1:
-                    Console.Write("Could not find: '%s'.\n", file_name);
+                    Log.Write("Could not find: '%s'.\n", file_name);
                     break;
                 case 2:
-                    Console.Write("Insufficient memory for reading the albumart.\n");
+                    Log.Write("Insufficient memory for reading the albumart.\n");
                     break;
                 case 3:
-                    Console.Write("Read error: '%s'.\n", file_name);
+                    Log.Write("Read error: '%s'.\n", file_name);
                     break;
                 case 4:
-                    Console.Write("Unsupported image: '%s'.\nSpecify JPEG/PNG/GIF image (128KB maximum)\n", file_name);
+                    Log.Write("Unsupported image: '%s'.\nSpecify JPEG/PNG/GIF image (128KB maximum)\n", file_name);
                     break;
                 default:
                     break;
@@ -959,7 +959,7 @@ namespace GroovyCodecs.Mp3.Mp3
                             "ogginput",
                             StringComparison.CurrentCultureIgnoreCase))
                         {
-                            Console.Write("sorry, vorbis support in LAME is deprecated.\n");
+                            Log.Write("sorry, vorbis support in LAME is deprecated.\n");
                             return -1;
                         }
                         else if (token.Substring(tokenPos).Equals("phone", StringComparison.CurrentCultureIgnoreCase))
@@ -967,14 +967,14 @@ namespace GroovyCodecs.Mp3.Mp3
                             if (presets_set(gfp, 0, 0, token, ProgramName) < 0)
                                 return -1;
 
-                            Console.Write("Warning: --phone is deprecated, use --preset phone instead!");
+                            Log.Write("Warning: --phone is deprecated, use --preset phone instead!");
                         }
                         else if (token.Substring(tokenPos).Equals("voice", StringComparison.CurrentCultureIgnoreCase))
                         {
                             if (presets_set(gfp, 0, 0, token, ProgramName) < 0)
                                 return -1;
 
-                            Console.Write("Warning: --voice is deprecated, use --preset voice instead!");
+                            Log.Write("Warning: --voice is deprecated, use --preset voice instead!");
                         }
                         else if (INTERNAL_OPTS && token.Substring(tokenPos).Equals(
                                      "noshort",
@@ -1101,7 +1101,7 @@ namespace GroovyCodecs.Mp3.Mp3
                                 if (!ignore_tag_errors)
                                     if (id3tag_mode == ID3TAG_MODE.ID3TAG_MODE_V1_ONLY)
                                     {
-                                        Console.Write("The track number has to be between 1 and 255 for ID3v1.\n");
+                                        Log.Write("The track number has to be between 1 and 255 for ID3v1.\n");
                                         return -1;
                                     }
                                     else if (id3tag_mode == ID3TAG_MODE.ID3TAG_MODE_V2_ONLY)
@@ -1110,7 +1110,7 @@ namespace GroovyCodecs.Mp3.Mp3
                                     else
                                     {
                                         if (silent < 10)
-                                            Console.Write(
+                                            Log.Write(
                                                 "The track number has to be between 1 and 255 for ID3v1, ignored for ID3v1.\n");
                                     }
                         }
@@ -1124,7 +1124,7 @@ namespace GroovyCodecs.Mp3.Mp3
                             argUsed = 1;
                             if (id3_tag(gfp, 'v', TextEncoding.TENC_RAW, nextArg))
                                 if (silent < 10)
-                                    Console.Write("Invalid field value: '%s'. Ignored\n", nextArg);
+                                    Log.Write("Invalid field value: '%s'. Ignored\n", nextArg);
                         }
                         else if (token.Substring(tokenPos).Equals("ti", StringComparison.CurrentCultureIgnoreCase))
                         {
@@ -1200,7 +1200,7 @@ namespace GroovyCodecs.Mp3.Mp3
                             {
                                 if (val < 0.001 || val > 50000.0)
                                 {
-                                    Console.Write("Must specify lowpass with --lowpass freq, freq >= 0.001 kHz\n");
+                                    Log.Write("Must specify lowpass with --lowpass freq, freq >= 0.001 kHz\n");
                                     return -1;
                                 }
 
@@ -1215,7 +1215,7 @@ namespace GroovyCodecs.Mp3.Mp3
                             argUsed = 1;
                             if (val < 0.001 || val > 50000.0)
                             {
-                                Console.Write(
+                                Log.Write(
                                     "Must specify lowpass width with --lowpass-width freq, freq >= 0.001 kHz\n");
                                 return -1;
                             }
@@ -1236,7 +1236,7 @@ namespace GroovyCodecs.Mp3.Mp3
                             {
                                 if (val < 0.001 || val > 50000.0)
                                 {
-                                    Console.Write("Must specify highpass with --highpass freq, freq >= 0.001 kHz\n");
+                                    Log.Write("Must specify highpass with --highpass freq, freq >= 0.001 kHz\n");
                                     return -1;
                                 }
 
@@ -1251,7 +1251,7 @@ namespace GroovyCodecs.Mp3.Mp3
                             argUsed = 1;
                             if (val < 0.001 || val > 50000.0)
                             {
-                                Console.Write(
+                                Log.Write(
                                     "Must specify highpass width with --highpass-width freq, freq >= 0.001 kHz\n");
                                 return -1;
                             }
@@ -1264,7 +1264,7 @@ namespace GroovyCodecs.Mp3.Mp3
                             val = double.Parse(nextArg);
                             if (val < 1.0)
                             {
-                                Console.Write("Must specify compression ratio >= 1.0\n");
+                                Log.Write("Must specify compression ratio >= 1.0\n");
                                 return -1;
                             }
 
@@ -1610,7 +1610,7 @@ namespace GroovyCodecs.Mp3.Mp3
                         else
                         {
                             {
-                                Console.Write("%s: unrecognized option --%s\n", ProgramName, token);
+                                Log.Write("%s: unrecognized option --%s\n", ProgramName, token);
                                 return -1;
                             }
                         }
@@ -1648,7 +1648,7 @@ namespace GroovyCodecs.Mp3.Mp3
                                             gfp.mode = MPEGMode.JOINT_STEREO;
                                             break;
                                         default:
-                                            Console.Write("%s: -m mode must be s/d/j/f/m not %s\n", ProgramName, arg);
+                                            Log.Write("%s: -m mode must be s/d/j/f/m not %s\n", ProgramName, arg);
                                             return -1;
                                     }
 
@@ -1783,7 +1783,7 @@ namespace GroovyCodecs.Mp3.Mp3
                                             gfp.emphasis = 3;
                                             break;
                                         default:
-                                            Console.Write("%s: -e emp must be n/5/c not %s\n", ProgramName, arg);
+                                            Log.Write("%s: -e emp must be n/5/c not %s\n", ProgramName, arg);
                                             return -1;
                                     }
 
@@ -1798,7 +1798,7 @@ namespace GroovyCodecs.Mp3.Mp3
                                     long_help(gfp, Console.Out, ProgramName, 0);
                                     return -1;
                                 default:
-                                    Console.Write("%s: unrecognized option -%c\n", ProgramName, c);
+                                    Log.Write("%s: unrecognized option -%c\n", ProgramName, c);
                                     return -1;
                             }
 
@@ -1826,7 +1826,7 @@ namespace GroovyCodecs.Mp3.Mp3
                         }
                         else
                         {
-                            Console.Write(
+                            Log.Write(
                                 "Error: 'nogap option'.  Calling program does not allow nogap option, or\n" +
                                 "you have exceeded maximum number of input files for the nogap option\n");
                             ng.num_nogap = -1;
@@ -1850,7 +1850,7 @@ namespace GroovyCodecs.Mp3.Mp3
                             }
                             else
                             {
-                                Console.Write("%s: excess arg %s\n", ProgramName, argv[i]);
+                                Log.Write("%s: excess arg %s\n", ProgramName, argv[i]);
                                 return -1;
                             }
                         }
@@ -1882,7 +1882,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
             if (nogap != 0 && gfp.bWriteVbrTag && nogap_tags == 0)
             {
-                Console.Write("Note: Disabling VBR Xing/Info tag since it interferes with --nogap\n");
+                Log.Write("Note: Disabling VBR Xing/Info tag since it interferes with --nogap\n");
                 gfp.bWriteVbrTag = false;
             }
 
@@ -1894,7 +1894,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
             if (input_format == GetAudio.sound_file_format.sf_ogg)
             {
-                Console.Write("sorry, vorbis support in LAME is deprecated.\n");
+                Log.Write("sorry, vorbis support in LAME is deprecated.\n");
                 return -1;
             }
 
@@ -1908,8 +1908,8 @@ namespace GroovyCodecs.Mp3.Mp3
             if (gfp.free_format)
                 if (gfp.brate < 8 || gfp.brate > 640)
                 {
-                    Console.Write("For free format, specify a bitrate between 8 and 640 kbps\n");
-                    Console.Write("with the -b <bitrate> option\n");
+                    Log.Write("For free format, specify a bitrate between 8 and 640 kbps\n");
+                    Log.Write("with the -b <bitrate> option\n");
                     return -1;
                 }
 

@@ -41,7 +41,7 @@ namespace GroovyCodecs.Coder
     			outFile.Write(outBuffer, 0, len);
     			outFile.Close();
 
-				Console.WriteLine($"Converted {file} to MP3 in {timer.ElapsedMilliseconds / 1000}s");
+				Log.WriteLine($"Converted {file} to MP3 in {timer.ElapsedMilliseconds / 1000}s");
 			}
 		}
 	}

@@ -468,7 +468,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 gfc.header[gfc.h_ptr].write_timing = gfc.header[old].write_timing + bitsPerFrame;
 
                 if (gfc.h_ptr == gfc.w_ptr)
-                    Console.Error.WriteLine("Error: MAX_HEADER_BUF too small in bitstream.c \n");
+                    Log.WriteLine("Error: MAX_HEADER_BUF too small in bitstream.c \n");
 
             }
         }
@@ -845,7 +845,7 @@ namespace GroovyCodecs.Mp3.Mp3
             total_bytes_output.total += bufByteIdx + 1;
 
             if (flushbits < 0)
-                Console.Error.WriteLine("strange error flushing buffer ... \n");
+                Log.WriteLine("strange error flushing buffer ... \n");
 
             return flushbits;
         }
@@ -950,7 +950,7 @@ namespace GroovyCodecs.Mp3.Mp3
              * what we think the resvsize is:
              */
             if (compute_flushbits(gfp, new TotalBytes()) != gfc.ResvSize)
-                Console.Error.WriteLine("Internal buffer inconsistency. flushbits <> ResvSize");
+                Log.WriteLine("Internal buffer inconsistency. flushbits <> ResvSize");
 
             /*
              * compare main_data_begin for the next frame with what we think the
@@ -958,7 +958,7 @@ namespace GroovyCodecs.Mp3.Mp3
              */
             if (l3_side.main_data_begin * 8 != gfc.ResvSize)
             {
-                Console.WriteLine(
+               /* Log.WriteLine(
                     "bit reservoir error: \n" + "l3_side.main_data_begin: %d \n" + "Resvoir size:             %d \n" +
                     "resv drain (post)         %d \n" + "resv drain (pre)          %d \n" +
                     "header and sideinfo:      %d \n" + "data bits:                %d \n" +
@@ -973,10 +973,10 @@ namespace GroovyCodecs.Mp3.Mp3
                     bits % 8,
                     bitsPerFrame);
 
-                Console.Error.WriteLine("This is a fatal error.  It has several possible causes:");
-                Console.Error.WriteLine("90%%  LAME compiled with buggy version of gcc using advanced optimizations");
-                Console.Error.WriteLine(" 9%%  Your system is overclocked");
-                Console.Error.WriteLine(" 1%%  bug in LAME encoding library");
+                Log.WriteLine("This is a fatal error.  It has several possible causes:");
+                Log.WriteLine("90%%  LAME compiled with buggy version of gcc using advanced optimizations");
+                Log.WriteLine(" 9%%  Your system is overclocked");
+                Log.WriteLine(" 1%%  bug in LAME encoding library");*/
 
                 gfc.ResvSize = l3_side.main_data_begin * 8;
             }

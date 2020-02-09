@@ -136,7 +136,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
         internal MPGLib mpg;
 
-        private FileStream musicin;
+        private Stream musicin;
 
         private int num_samples_read;
 
@@ -154,9 +154,9 @@ namespace GroovyCodecs.Mp3.Mp3
             mpg = mpg2;
         }
 
-        internal virtual FileStream init_outfile(string outPath)
+        internal virtual Stream init_outfile(string outPath)
         {
-            FileStream outf;
+            Stream outf;
             try
             {
                 if (Directory.Exists(outPath)) Directory.Delete(outPath, true);
@@ -165,22 +165,22 @@ namespace GroovyCodecs.Mp3.Mp3
             }
             catch (FileNotFoundException e)
             {
-                Console.WriteLine(e.ToString());
-                Console.Write(e.StackTrace);
+                Log.WriteLine(e.ToString());
+                Log.Write(e.StackTrace);
                 return null;
             }
 
             return outf;
         }
 
-        internal void init_infile(LameGlobalFlags gfp, string inPath, Enc enc)
+        internal void init_infile(LameGlobalFlags gfp, Stream mp3Stream, Enc enc)
         {
             count_samples_carefully = false;
             num_samples_read = 0;
             pcmbitwidth = parse.in_bitwidth;
             pcmswapbytes = parse.swapbytes;
             pcm_is_unsigned_8bit = !parse.in_signed;
-            musicin = OpenSndFile(gfp, inPath, enc);
+            musicin = OpenSndFile(gfp, mp3Stream, enc);
         }
 
         internal void close_infile()
@@ -301,7 +301,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return samples_read;
         }
 
-        internal virtual int read_samples_mp3(LameGlobalFlags gfp, FileStream musicin, short[][] mpg123pcm)
+        internal virtual int read_samples_mp3(LameGlobalFlags gfp, Stream musicin, short[][] mpg123pcm)
         {
             int @out;
             @out = lame_decode_fromfile(musicin, mpg123pcm[0], mpg123pcm[1], parse.mp3input_data);
@@ -315,7 +315,7 @@ namespace GroovyCodecs.Mp3.Mp3
             if (gfp.num_channels != parse.mp3input_data.stereo)
             {
                 if (parse.silent < 10)
-                    Console.WriteLine("Error: number of channels has changed in %s - not supported\n", type_name);
+                    Log.WriteLine("Error: number of channels has changed in %s - not supported\n", type_name);
 
                 @out = -1;
             }
@@ -323,7 +323,7 @@ namespace GroovyCodecs.Mp3.Mp3
             if (gfp.in_samplerate != parse.mp3input_data.samplerate)
             {
                 if (parse.silent < 10)
-                    Console.WriteLine("Error: sample frequency has changed in %s - not supported\n", type_name);
+                    Log.WriteLine("Error: sample frequency has changed in %s - not supported\n", type_name);
 
                 @out = -1;
             }
@@ -331,7 +331,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return @out;
         }
 
-        internal int WriteWaveHeader(FileStream fp, int pcmbytes, int freq, int channels, int bits)
+        internal int WriteWaveHeader(Stream fp, int pcmbytes, int freq, int channels, int bits)
         {
             try
             {
@@ -365,7 +365,7 @@ namespace GroovyCodecs.Mp3.Mp3
             int bytes_per_sample,
             bool swap_order,
             int[] sample_buffer,
-            FileStream pcm_in)
+            Stream pcm_in)
         {
             var bytes = new byte[bytes_per_sample * samples_to_read];
             pcm_in.Read(bytes, 0, bytes.Length);
@@ -415,7 +415,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return samples_read;
         }
 
-        private int read_samples_pcm(FileStream musicin, int[] sample_buffer, int samples_to_read)
+        private int read_samples_pcm(Stream musicin, int[] sample_buffer, int samples_to_read)
         {
             var samples_read = 0;
             bool swap_byte_order;
@@ -466,7 +466,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return samples_read;
         }
 
-        private int parse_wave_header(LameGlobalFlags gfp, FileStream sf)
+        private int parse_wave_header(LameGlobalFlags gfp, Stream sf)
         {
             var format_tag = 0;
             var channels = 0;
@@ -545,7 +545,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 if (format_tag != WAVE_FORMAT_PCM)
                 {
                     if (parse.silent < 10)
-                        Console.WriteLine("Unsupported data format: 0x%04X\n", format_tag);
+                        Log.WriteLine("Unsupported data format: 0x%04X\n", format_tag);
 
                     return 0;
                 }
@@ -553,7 +553,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 if (-1 == (gfp.num_channels = channels))
                 {
                     if (parse.silent < 10)
-                        Console.WriteLine("Unsupported number of channels: %d\n", channels);
+                        Log.WriteLine("Unsupported number of channels: %d\n", channels);
 
                     return 0;
                 }
@@ -573,7 +573,7 @@ namespace GroovyCodecs.Mp3.Mp3
             if (pcm_aiff_data.sampleType != IFF_ID_SSND)
             {
                 if (parse.silent < 10)
-                    Console.WriteLine("ERROR: input sound data is not PCM\n");
+                    Log.WriteLine("ERROR: input sound data is not PCM\n");
 
                 return 1;
             }
@@ -587,7 +587,7 @@ namespace GroovyCodecs.Mp3.Mp3
                     break;
                 default:
                     if (parse.silent < 10)
-                        Console.WriteLine("ERROR: input sound data is not 8, 16, 24 or 32 bits\n");
+                        Log.WriteLine("ERROR: input sound data is not 8, 16, 24 or 32 bits\n");
 
                     return 1;
             }
@@ -595,7 +595,7 @@ namespace GroovyCodecs.Mp3.Mp3
             if (pcm_aiff_data.numChannels != 1 && pcm_aiff_data.numChannels != 2)
             {
                 if (parse.silent < 10)
-                    Console.WriteLine("ERROR: input sound data is not mono or stereo\n");
+                    Log.WriteLine("ERROR: input sound data is not mono or stereo\n");
 
                 return 1;
             }
@@ -603,7 +603,7 @@ namespace GroovyCodecs.Mp3.Mp3
             if (pcm_aiff_data.blkAlgn.blockSize != 0)
             {
                 if (parse.silent < 10)
-                    Console.WriteLine("ERROR: block size of input sound data is not 0 bytes\n");
+                    Log.WriteLine("ERROR: block size of input sound data is not 0 bytes\n");
 
                 return 1;
             }
@@ -619,7 +619,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return x;
         }
 
-        private int parse_aiff_header(LameGlobalFlags gfp, FileStream sf)
+        private int parse_aiff_header(LameGlobalFlags gfp, Stream sf)
         {
             int subSize = 0, dataType = IFF_ID_NONE;
             var aiff_info = new IFF_AIFF();
@@ -751,7 +751,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 if (-1 == (gfp.num_channels = aiff_info.numChannels))
                 {
                     if (parse.silent < 10)
-                        Console.WriteLine("Unsupported number of channels: %u\n", aiff_info.numChannels);
+                        Log.WriteLine("Unsupported number of channels: %u\n", aiff_info.numChannels);
 
                     return 0;
                 }
@@ -768,7 +768,7 @@ namespace GroovyCodecs.Mp3.Mp3
                     catch (IOException)
                     {
                         if (parse.silent < 10)
-                            Console.WriteLine("Can't rewind stream to audio data position\n");
+                            Log.WriteLine("Can't rewind stream to audio data position\n");
 
                         return 0;
                     }
@@ -779,7 +779,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return -1;
         }
 
-        private sound_file_format parse_file_header(LameGlobalFlags gfp, FileStream sf)
+        private sound_file_format parse_file_header(LameGlobalFlags gfp, Stream sf)
         {
             var type = Read32BitsHighLow(sf);
             count_samples_carefully = false;
@@ -795,7 +795,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
                 if (ret < 0)
                     if (parse.silent < 10)
-                        Console.Error.WriteLine("Warning: corrupt or unsupported WAVE format");
+                        Log.WriteLine("Warning: corrupt or unsupported WAVE format");
             }
             else if (type == IFF_ID_FORM)
             {
@@ -808,18 +808,18 @@ namespace GroovyCodecs.Mp3.Mp3
 
                 if (ret < 0)
                     if (parse.silent < 10)
-                        Console.WriteLine("Warning: corrupt or unsupported AIFF format\n");
+                        Log.WriteLine("Warning: corrupt or unsupported AIFF format\n");
             }
             else
             {
                 if (parse.silent < 10)
-                    Console.Error.WriteLine("Warning: unsupported audio format\n");
+                    Log.WriteLine("Warning: unsupported audio format\n");
             }
 
             return sound_file_format.sf_unknown;
         }
 
-        private void closeSndFile(sound_file_format input, FileStream musicin)
+        private void closeSndFile(sound_file_format input, Stream musicin)
         {
             if (musicin != null)
                 try
@@ -832,22 +832,15 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
         }
 
-        private FileStream OpenSndFile(LameGlobalFlags gfp, string inPath, Enc enc)
+        private Stream OpenSndFile(LameGlobalFlags gfp, Stream mp3Stream, Enc enc)
         {
             gfp.num_samples = -1;
-            try
-            {
-                musicin = new FileStream(inPath, FileMode.Open, FileAccess.Read);
-            }
-            catch (FileNotFoundException e)
-            {
-                throw new Exception(string.Format("Could not find \"{0}\".", inPath), e);
-            }
+            musicin = mp3Stream;
 
             if (is_mpeg_file_format(parse.input_format))
             {
                 if (-1 == lame_decode_initfile(musicin, parse.mp3input_data, enc))
-                    throw new Exception(string.Format("Error reading headers in mp3 input file {0}.", inPath));
+                    throw new Exception(string.Format("Error reading headers in mp3 input file {0}.", mp3Stream));
 
                 gfp.num_channels = parse.mp3input_data.stereo;
                 gfp.in_samplerate = parse.mp3input_data.samplerate;
@@ -861,11 +854,11 @@ namespace GroovyCodecs.Mp3.Mp3
             {
                 if (parse.silent < 10)
                 {
-                    Console.WriteLine("Assuming raw pcm input file");
+                    Log.WriteLine("Assuming raw pcm input file");
                     if (parse.swapbytes)
-                        Console.Write(" : Forcing byte-swapping\n");
+                        Log.Write(" : Forcing byte-swapping\n");
                     else
-                        Console.Write("\n");
+                        Log.Write("\n");
                 }
 
                 pcmswapbytes = parse.swapbytes;
@@ -966,7 +959,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return true;
         }
 
-        private int lame_decode_initfile(FileStream fd, MP3Data mp3data, Enc enc)
+        private int lame_decode_initfile(Stream fd, MP3Data mp3data, Enc enc)
         {
             var buf = new byte[100];
             var pcm_l = new short[1152];
@@ -983,15 +976,15 @@ namespace GroovyCodecs.Mp3.Mp3
             }
             catch (IOException e)
             {
-                Console.WriteLine(e.ToString());
-                Console.Write(e.StackTrace);
+                Log.WriteLine(e.ToString());
+                Log.Write(e.StackTrace);
                 return -1;
             }
 
             if (buf[0] == (sbyte)'I' && buf[1] == (sbyte)'D' && buf[2] == (sbyte)'3')
             {
                 if (parse.silent < 10)
-                    Console.WriteLine(
+                    Log.WriteLine(
                         "ID3v2 found. " + "Be aware that the ID3 tag is currently lost when transcoding.");
 
                 len = 6;
@@ -1001,8 +994,8 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine(e.ToString());
-                    Console.Write(e.StackTrace);
+                    Log.WriteLine(e.ToString());
+                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
@@ -1017,8 +1010,8 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine(e.ToString());
-                    Console.Write(e.StackTrace);
+                    Log.WriteLine(e.ToString());
+                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
@@ -1029,8 +1022,8 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine(e.ToString());
-                    Console.Write(e.StackTrace);
+                    Log.WriteLine(e.ToString());
+                    Log.Write(e.StackTrace);
                     return -1;
                 }
             }
@@ -1043,14 +1036,14 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine(e.ToString());
-                    Console.Write(e.StackTrace);
+                    Log.WriteLine(e.ToString());
+                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
                 var aid_header = (buf[0] & 0xff) + 256 * (buf[1] & 0xff);
                 if (parse.silent < 10)
-                    Console.Write("Album ID found.  length={0:D} \n", aid_header);
+                    Log.Write("Album ID found.  length={0:D} \n", aid_header);
 
                 try
                 {
@@ -1058,8 +1051,8 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine(e.ToString());
-                    Console.Write(e.StackTrace);
+                    Log.WriteLine(e.ToString());
+                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
@@ -1069,8 +1062,8 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine(e.ToString());
-                    Console.Write(e.StackTrace);
+                    Log.WriteLine(e.ToString());
+                    Log.Write(e.StackTrace);
                     return -1;
                 }
             }
@@ -1088,8 +1081,8 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine(e.ToString());
-                    Console.Write(e.StackTrace);
+                    Log.WriteLine(e.ToString());
+                    Log.Write(e.StackTrace);
                     return -1;
                 }
             }
@@ -1097,7 +1090,7 @@ namespace GroovyCodecs.Mp3.Mp3
             if ((buf[2] & 0xf0) == 0)
             {
                 if (parse.silent < 10)
-                    Console.WriteLine("Input file is freeformat.");
+                    Log.WriteLine("Input file is freeformat.");
 
                 freeformat = true;
             }
@@ -1110,12 +1103,12 @@ namespace GroovyCodecs.Mp3.Mp3
             {
                 try
                 {
-                    fd.Read(buf, 0, 1024);
+                    fd.Read(buf, 0, buf.Length);
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine(e.ToString());
-                    Console.Write(e.StackTrace);
+                    Log.WriteLine(e.ToString());
+                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
@@ -1127,7 +1120,7 @@ namespace GroovyCodecs.Mp3.Mp3
             if (mp3data.bitrate == 0 && !freeformat)
             {
                 if (parse.silent < 10)
-                    Console.Error.WriteLine("fail to sync...");
+                    Log.WriteLine("fail to sync...");
 
                 return lame_decode_initfile(fd, mp3data, enc);
             }
@@ -1143,7 +1136,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return 0;
         }
 
-        private int lame_decode_fromfile(FileStream fd, short[] pcm_l, short[] pcm_r, MP3Data mp3data)
+        private int lame_decode_fromfile(Stream fd, short[] pcm_l, short[] pcm_r, MP3Data mp3data)
         {
             var ret = 0;
             var len = 0;
@@ -1161,8 +1154,8 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine(e.ToString());
-                    Console.Write(e.StackTrace);
+                    Log.WriteLine(e.ToString());
+                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
@@ -1210,7 +1203,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return false;
         }
 
-        private int Read32BitsLowHigh(FileStream fp)
+        private int Read32BitsLowHigh(Stream fp)
         {
             var first = 0xffff & Read16BitsLowHigh(fp);
             var second = 0xffff & Read16BitsLowHigh(fp);
@@ -1218,7 +1211,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return result;
         }
 
-        private int Read16BitsLowHigh(FileStream fp)
+        private int Read16BitsLowHigh(Stream fp)
         {
             try
             {
@@ -1229,13 +1222,13 @@ namespace GroovyCodecs.Mp3.Mp3
             }
             catch (IOException e)
             {
-                Console.WriteLine(e.ToString());
-                Console.Write(e.StackTrace);
+                Log.WriteLine(e.ToString());
+                Log.Write(e.StackTrace);
                 return 0;
             }
         }
 
-        private int Read16BitsHighLow(FileStream fp)
+        private int Read16BitsHighLow(Stream fp)
         {
             try
             {
@@ -1245,13 +1238,13 @@ namespace GroovyCodecs.Mp3.Mp3
             }
             catch (IOException e)
             {
-                Console.WriteLine(e.ToString());
-                Console.Write(e.StackTrace);
+                Log.WriteLine(e.ToString());
+                Log.Write(e.StackTrace);
                 return 0;
             }
         }
 
-        private int Read32BitsHighLow(FileStream fp)
+        private int Read32BitsHighLow(Stream fp)
         {
             var first = 0xffff & Read16BitsHighLow(fp);
             var second = 0xffff & Read16BitsHighLow(fp);
@@ -1300,20 +1293,20 @@ namespace GroovyCodecs.Mp3.Mp3
             return f;
         }
 
-        private double readIeeeExtendedHighLow(FileStream fp)
+        private double readIeeeExtendedHighLow(Stream fp)
         {
             var bytes = new byte[10];
             var len = fp.Read(bytes, 0, bytes.Length);
             return convertFromIeeeExtended(bytes);
         }
 
-        private void write32BitsLowHigh(FileStream fp, int i)
+        private void write32BitsLowHigh(Stream fp, int i)
         {
             write16BitsLowHigh(fp, (int)(i & 0xffffL));
             write16BitsLowHigh(fp, (int)((i >> 16) & 0xffffL));
         }
 
-        internal void write16BitsLowHigh(FileStream fp, int i)
+        internal void write16BitsLowHigh(Stream fp, int i)
         {
             fp.WriteByte((byte)(i & 0xff));
             fp.WriteByte((byte)((i >> 8) & 0xff));

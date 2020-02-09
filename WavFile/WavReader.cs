@@ -6,7 +6,7 @@ namespace GroovyCodecs.WavFile
 {
 	public class WavReader
 	{
-		FileStream _fs;
+		Stream _fs;
 		BinaryReader _reader;
 		private int chunkID;
 		private int fileSize;

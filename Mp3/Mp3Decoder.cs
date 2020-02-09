@@ -50,9 +50,11 @@ namespace GroovyCodecs.Mp3
 
         private readonly Mp3Version ver;
 
-        private int wavsize;
+        public int WavSize;
 
-        public Mp3Decoder(string mp3File)
+        public int Length;
+        
+        public Mp3Decoder(Stream mp3Stream)
         {
             // encoder modules
             lame = new Lame();
@@ -106,19 +108,16 @@ namespace GroovyCodecs.Mp3
 
             parse.input_format = GetAudio.sound_file_format.sf_mp3;
 
-            var inPath = new StringBuilder(mp3File);
             var enc = new Enc();
 
-            gaud.init_infile(gfp, inPath.ToString(), enc);
+            gaud.init_infile(gfp, mp3Stream, enc);
 
             var skip_start = 0;
             var skip_end = 0;
 
             if (parse.silent < 10)
-                Console.Write(
+                Log.Write(
                     "\rinput:  {0}{1}({2:g} kHz, {3:D} channel{4}, ",
-                    inPath,
-                    inPath.Length > 26 ? "\n\t" : "  ",
                     gfp.in_samplerate / 1000,
                     gfp.num_channels,
                     gfp.num_channels != 1 ? "s" : "");
@@ -136,31 +135,49 @@ namespace GroovyCodecs.Mp3
                 skip_start = gfp.encoder_delay + 528 + 1;
             }
 
-            Console.Write("MPEG-{0:D}{1} Layer {2}", 2 - gfp.version, gfp.out_samplerate < 16000 ? ".5" : "", "III");
+            Log.Write("MPEG-{0:D}{1} Layer {2}", 2 - gfp.version, gfp.out_samplerate < 16000 ? ".5" : "", "III");
 
-            Console.Write(")\noutput: (16 bit, Microsoft WAVE)\n");
+            Log.Write(")\noutput: (16 bit, Microsoft WAVE)\n");
 
             if (skip_start > 0)
-                Console.Write("skipping initial {0:D} samples (encoder+decoder delay)\n", skip_start);
+                Log.Write("skipping initial {0:D} samples (encoder+decoder delay)\n", skip_start);
 
             if (skip_end > 0)
-                Console.Write("skipping final {0:D} samples (encoder padding-decoder delay)\n", skip_end);
+                Log.Write("skipping final {0:D} samples (encoder padding-decoder delay)\n", skip_end);
 
-            wavsize = -(skip_start + skip_end);
+            WavSize = -(skip_start + skip_end);
             parse.mp3input_data.totalframes = parse.mp3input_data.nsamp / parse.mp3input_data.framesize;
 
+            Length = parse.mp3input_data.nsamp;
+            
             Debug.Assert(gfp.num_channels >= 1 && gfp.num_channels <= 2);
         }
 
-        public virtual void decode(MemoryStream sampleBuffer, bool playOriginal)
+        public virtual int decode(float[] sampleBuffer, bool playOriginal)
         {
-            var iread = gaud.get_audio16(gfp, buffer);
+            var iread = gaud.get_audio16(gfp, buffer); // TODO: Could I get float directly instead of using 16bit?
             if (iread >= 0)
             {
                 parse.mp3input_data.framenum += iread / parse.mp3input_data.framesize;
-                wavsize += iread;
+                WavSize += iread;
 
-                for (var i = 0; i < iread; i++)
+                if (gfp.num_channels == 2)
+                {
+                    for (var i = 0; i < iread; i++)
+                    {
+                        sampleBuffer[i*2] = buffer[0][i] / 32768f;
+                        sampleBuffer[i*2 + 1] = buffer[1][i] / 32768f;
+                    }
+                }
+                else
+                {
+                    for (var i = 0; i < iread; i++)
+                    {
+                        sampleBuffer[i] = buffer[0][i] / 32768f;
+                    }
+                }
+
+                /*for (var i = 0; i < iread; i++)
                 {
                     if (playOriginal)
                     {
@@ -174,9 +191,12 @@ namespace GroovyCodecs.Mp3
                         // gaud.write16BitsLowHigh(outf, buffer[1][i] & 0xffff);
                         // TODO two channels?
                     }
-                }
+                }*/
+
+                return iread * gfp.num_channels;
             }
 
+            return -1;
         }
 
         public virtual void close()

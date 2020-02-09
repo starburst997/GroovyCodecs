@@ -194,7 +194,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 {
                     gfc.highpass1 = 0;
                     gfc.highpass2 = 0;
-                    Console.Error.WriteLine("Warning: highpass filter disabled.  " + "highpass frequency too small\n");
+                    Log.WriteLine("Warning: highpass filter disabled.  " + "highpass frequency too small\n");
                 }
 
             if (gfc.highpass2 > 0)
@@ -1313,35 +1313,35 @@ namespace GroovyCodecs.Mp3.Mp3
             var gfc = gfp.internal_flags;
             double out_samplerate = gfp.out_samplerate;
             var in_samplerate = gfp.out_samplerate * gfc.resample_ratio;
-            Console.Write("LAME {0} {1} ({2})\n", ver.LameVersion, ver.LameOsBitness, ver.LameUrl);
+            Log.Write("LAME {0} {1} ({2})\n", ver.LameVersion, ver.LameOsBitness, ver.LameUrl);
             if (gfp.num_channels == 2 && gfc.channels_out == 1)
-                Console.Write("Autoconverting from stereo to mono. Setting encoding to mono mode.\n");
+                Log.Write("Autoconverting from stereo to mono. Setting encoding to mono mode.\n");
 
             if (BitStream.NEQ((float)gfc.resample_ratio, 1.0f))
-                Console.Write(
+                Log.Write(
                     "Resampling:  input {0:g} kHz  output {1:g} kHz\n",
                     0.001 * in_samplerate,
                     0.001 * out_samplerate);
 
             if (gfc.highpass2 > 0.0)
-                Console.Write(
+                Log.Write(
                     "Using polyphase highpass filter, transition band: {0,5:F0} Hz - {1,5:F0} Hz\n",
                     0.5 * gfc.highpass1 * out_samplerate,
                     0.5 * gfc.highpass2 * out_samplerate);
 
             if (0.0 < gfc.lowpass1 || 0.0 < gfc.lowpass2)
-                Console.Write(
+                Log.Write(
                     "Using polyphase lowpass filter, transition band: {0,5:F0} Hz - {1,5:F0} Hz\n",
                     0.5 * gfc.lowpass1 * out_samplerate,
                     0.5 * gfc.lowpass2 * out_samplerate);
             else
-                Console.Write("polyphase lowpass filter disabled\n");
+                Log.Write("polyphase lowpass filter disabled\n");
 
             if (gfp.free_format)
             {
-                Console.WriteLine("Warning: many decoders cannot handle free format bitstreams\n");
+                Log.WriteLine("Warning: many decoders cannot handle free format bitstreams\n");
                 if (gfp.brate > 320)
-                    Console.WriteLine(
+                    Log.WriteLine(
                         "Warning: many decoders cannot handle free format bitrates >320 kbps (see documentation)\n");
             }
         }
@@ -1350,10 +1350,10 @@ namespace GroovyCodecs.Mp3.Mp3
         {
 
             var gfc = gfp.internal_flags;
-            Console.WriteLine("\nmisc:\n\n");
-            Console.WriteLine("\tscaling: %g\n", gfp.scale);
-            Console.WriteLine("\tch0 (left) scaling: %g\n", gfp.scale_left);
-            Console.WriteLine("\tch1 (right) scaling: %g\n", gfp.scale_right);
+            Log.WriteLine("\nmisc:\n\n");
+            Log.WriteLine("\tscaling: %g\n", gfp.scale);
+            Log.WriteLine("\tch0 (left) scaling: %g\n", gfp.scale_left);
+            Log.WriteLine("\tch1 (right) scaling: %g\n", gfp.scale_right);
             string pc;
             switch (gfc.use_best_huffman)
             {
@@ -1368,10 +1368,10 @@ namespace GroovyCodecs.Mp3.Mp3
                     break;
             }
 
-            Console.WriteLine("\thuffman search: %s\n", pc);
-            Console.WriteLine("\texperimental Y=%d\n", gfp.experimentalY);
-            Console.WriteLine("\t...\n");
-            Console.WriteLine("\nstream format:\n\n");
+            Log.WriteLine("\thuffman search: %s\n", pc);
+            Log.WriteLine("\texperimental Y=%d\n", gfp.experimentalY);
+            Log.WriteLine("\t...\n");
+            Log.WriteLine("\nstream format:\n\n");
             switch (gfp.version)
             {
                 case 0:
@@ -1388,7 +1388,7 @@ namespace GroovyCodecs.Mp3.Mp3
                     break;
             }
 
-            Console.WriteLine("\tMPEG-%s Layer 3\n", pc);
+            Log.WriteLine("\tMPEG-%s Layer 3\n", pc);
             switch (gfp.mode)
             {
                 case MPEGMode.JOINT_STEREO:
@@ -1411,7 +1411,7 @@ namespace GroovyCodecs.Mp3.Mp3
                     break;
             }
 
-            Console.WriteLine("\t%d channel - %s\n", gfc.channels_out, pc);
+            Log.WriteLine("\t%d channel - %s\n", gfc.channels_out, pc);
             switch (gfp.VBR)
             {
                 case VbrMode.vbr_off:
@@ -1422,7 +1422,7 @@ namespace GroovyCodecs.Mp3.Mp3
                     break;
             }
 
-            Console.WriteLine("\tpadding: %s\n", pc);
+            Log.WriteLine("\tpadding: %s\n", pc);
             if (VbrMode.vbr_default == gfp.VBR)
             {
                 pc = "(default)";
@@ -1441,30 +1441,30 @@ namespace GroovyCodecs.Mp3.Mp3
             switch (gfp.VBR)
             {
                 case VbrMode.vbr_off:
-                    Console.WriteLine("\tconstant bitrate - CBR %s\n", pc);
+                    Log.WriteLine("\tconstant bitrate - CBR %s\n", pc);
                     break;
                 case VbrMode.vbr_abr:
-                    Console.WriteLine("\tvariable bitrate - ABR %s\n", pc);
+                    Log.WriteLine("\tvariable bitrate - ABR %s\n", pc);
                     break;
                 case VbrMode.vbr_rh:
-                    Console.WriteLine("\tvariable bitrate - VBR rh %s\n", pc);
+                    Log.WriteLine("\tvariable bitrate - VBR rh %s\n", pc);
                     break;
                 case VbrMode.vbr_mt:
-                    Console.WriteLine("\tvariable bitrate - VBR mt %s\n", pc);
+                    Log.WriteLine("\tvariable bitrate - VBR mt %s\n", pc);
                     break;
                 case VbrMode.vbr_mtrh:
-                    Console.WriteLine("\tvariable bitrate - VBR mtrh %s\n", pc);
+                    Log.WriteLine("\tvariable bitrate - VBR mtrh %s\n", pc);
                     break;
                 default:
-                    Console.WriteLine("\t ?? oops, some new one ?? \n");
+                    Log.WriteLine("\t ?? oops, some new one ?? \n");
                     break;
             }
 
             if (gfp.bWriteVbrTag)
-                Console.WriteLine("\tusing LAME Tag\n");
+                Log.WriteLine("\tusing LAME Tag\n");
 
-            Console.WriteLine("\t...\n");
-            Console.WriteLine("\npsychoacoustic:\n\n");
+            Log.WriteLine("\t...\n");
+            Log.WriteLine("\npsychoacoustic:\n\n");
             switch (gfp.short_blocks)
             {
                 default:
@@ -1484,15 +1484,15 @@ namespace GroovyCodecs.Mp3.Mp3
                     break;
             }
 
-            Console.WriteLine("\tusing short blocks: %s\n", pc);
-            Console.WriteLine("\tsubblock gain: %d\n", gfc.subblock_gain);
-            Console.WriteLine("\tadjust masking: %g dB\n", gfc.PSY.mask_adjust);
-            Console.WriteLine("\tadjust masking short: %g dB\n", gfc.PSY.mask_adjust_short);
-            Console.WriteLine("\tquantization comparison: %d\n", gfp.quant_comp);
-            Console.WriteLine("\t ^ comparison short blocks: %d\n", gfp.quant_comp_short);
-            Console.WriteLine("\tnoise shaping: %d\n", gfc.noise_shaping);
-            Console.WriteLine("\t ^ amplification: %d\n", gfc.noise_shaping_amp);
-            Console.WriteLine("\t ^ stopping: %d\n", gfc.noise_shaping_stop);
+            Log.WriteLine("\tusing short blocks: %s\n", pc);
+            Log.WriteLine("\tsubblock gain: %d\n", gfc.subblock_gain);
+            Log.WriteLine("\tadjust masking: %g dB\n", gfc.PSY.mask_adjust);
+            Log.WriteLine("\tadjust masking short: %g dB\n", gfc.PSY.mask_adjust_short);
+            Log.WriteLine("\tquantization comparison: %d\n", gfp.quant_comp);
+            Log.WriteLine("\t ^ comparison short blocks: %d\n", gfp.quant_comp_short);
+            Log.WriteLine("\tnoise shaping: %d\n", gfc.noise_shaping);
+            Log.WriteLine("\t ^ amplification: %d\n", gfc.noise_shaping_amp);
+            Log.WriteLine("\t ^ stopping: %d\n", gfc.noise_shaping_stop);
             pc = "using";
             if (gfp.ATHshort)
                 pc = "the only masking for short blocks";
@@ -1503,25 +1503,25 @@ namespace GroovyCodecs.Mp3.Mp3
             if (gfp.noATH)
                 pc = "not used";
 
-            Console.WriteLine("\tATH: %s\n", pc);
-            Console.WriteLine("\t ^ type: %d\n", gfp.ATHtype);
-            Console.WriteLine("\t ^ shape: %g%s\n", gfp.ATHcurve, " (only for type 4)");
-            Console.WriteLine("\t ^ level adjustement: %g\n", gfp.ATHlower);
-            Console.WriteLine("\t ^ adjust type: %d\n", gfc.ATH.useAdjust);
-            Console.WriteLine("\t ^ adjust sensitivity power: %f\n", gfc.ATH.aaSensitivityP);
-            Console.WriteLine("\t ^ adapt threshold type: %d\n", gfp.athaa_loudapprox);
-            Console.WriteLine("\texperimental psy tunings by Naoki Shibata\n");
-            Console.WriteLine(
+            Log.WriteLine("\tATH: %s\n", pc);
+            Log.WriteLine("\t ^ type: %d\n", gfp.ATHtype);
+            Log.WriteLine("\t ^ shape: %g%s\n", gfp.ATHcurve, " (only for type 4)");
+            Log.WriteLine("\t ^ level adjustement: %g\n", gfp.ATHlower);
+            Log.WriteLine("\t ^ adjust type: %d\n", gfc.ATH.useAdjust);
+            Log.WriteLine("\t ^ adjust sensitivity power: %f\n", gfc.ATH.aaSensitivityP);
+            Log.WriteLine("\t ^ adapt threshold type: %d\n", gfp.athaa_loudapprox);
+            Log.WriteLine("\texperimental psy tunings by Naoki Shibata\n");
+            Log.WriteLine(
                 "\t   adjust masking bass=%g dB, alto=%g dB, treble=%g dB, sfb21=%g dB\n",
                 10 * Math.Log10(gfc.nsPsy.longfact[0]),
                 10 * Math.Log10(gfc.nsPsy.longfact[7]),
                 10 * Math.Log10(gfc.nsPsy.longfact[14]),
                 10 * Math.Log10(gfc.nsPsy.longfact[21]));
             pc = gfp.useTemporal == true ? "yes" : "no";
-            Console.WriteLine("\tusing temporal masking effect: %s\n", pc);
-            Console.WriteLine("\tinterchannel masking ratio: %g\n", gfp.interChRatio);
-            Console.WriteLine("\t...\n");
-            Console.WriteLine("\n");
+            Log.WriteLine("\tusing temporal masking effect: %s\n", pc);
+            Log.WriteLine("\tinterchannel masking ratio: %g\n", gfp.interChRatio);
+            Log.WriteLine("\t...\n");
+            Log.WriteLine("\n");
         }
 
         private int lame_encode_frame(

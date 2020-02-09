@@ -1136,7 +1136,7 @@ namespace GroovyCodecs.Mp3.Mp3
             return bytesWritten;
         }
 
-        private int skipId3v2(FileStream fpStream)
+        private int skipId3v2(Stream fpStream)
         {
             // seek to the beginning of the stream
             fpStream.Seek(0, 0);
@@ -1262,7 +1262,7 @@ namespace GroovyCodecs.Mp3.Mp3
         /// <exception cref="IOException">
         ///     I/O error
         /// </exception>
-        internal int putVbrTag(LameGlobalFlags gfp, FileStream stream)
+        internal int putVbrTag(LameGlobalFlags gfp, Stream stream)
         {
 
             var gfc = gfp.internal_flags;

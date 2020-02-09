@@ -1373,7 +1373,7 @@ namespace GroovyCodecs.Mp3.Mp3
                         cod_info.scalefac_compress = 500 + slen1 * 3 + slen2;
                         break;
                     default:
-                        Console.WriteLine("intensity stereo not implemented yet\n");
+                        Log.WriteLine("intensity stereo not implemented yet\n");
                         break;
                 }
             }

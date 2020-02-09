@@ -286,7 +286,7 @@ namespace GroovyCodecs.Mp3.Mpg
                 case 3:
                     if (fr.framesize > MAX_INPUT_FRAMESIZE)
                     {
-                        Console.WriteLine("Frame size too big.\n");
+                        Log.WriteLine("Frame size too big.\n");
                         fr.framesize = MAX_INPUT_FRAMESIZE;
                         return 0;
                     }
@@ -304,7 +304,7 @@ namespace GroovyCodecs.Mp3.Mpg
 
                     break;
                 default:
-                    Console.WriteLine("Sorry, layer %d not supported\n", fr.lay);
+                    Log.WriteLine("Sorry, layer %d not supported\n", fr.lay);
                     return 0;
             }
             /* print_header(fr); */
@@ -315,7 +315,7 @@ namespace GroovyCodecs.Mp3.Mpg
         internal void print_header(Frame fr)
         {
 
-            Console.WriteLine(
+            /*Log.WriteLine(
                 "MPEG %s, Layer: %s, Freq: %d, mode: %s, modext: %d, BPF : %d\n",
                 fr.mpeg25 ? "2.5" : (fr.lsf != 0 ? "2.0" : "1.0"),
                 layers[fr.lay],
@@ -323,28 +323,28 @@ namespace GroovyCodecs.Mp3.Mpg
                 modes[fr.mode],
                 fr.mode_ext,
                 fr.framesize + 4);
-            Console.WriteLine(
+            Log.WriteLine(
                 "Channels: %d, copyright: %s, original: %s, CRC: %s, emphasis: %d.\n",
                 fr.stereo,
                 fr.copyright != 0 ? "Yes" : "No",
                 fr.original != 0 ? "Yes" : "No",
                 fr.error_protection ? "Yes" : "No",
                 fr.emphasis);
-            Console.WriteLine(
+            Log.WriteLine(
                 "Bitrate: %d Kbits/s, Extension value: %d\n",
                 tabsel_123[fr.lsf][fr.lay - 1][fr.bitrate_index],
-                fr.extension);
+                fr.extension);*/
         }
 
         internal void print_header_compact(Frame fr)
         {
-            Console.WriteLine(
+            /*Log.WriteLine(
                 "MPEG %s layer %s, %d kbit/s, %d Hz %s\n",
                 fr.mpeg25 ? "2.5" : (fr.lsf != 0 ? "2.0" : "1.0"),
                 layers[fr.lay],
                 tabsel_123[fr.lsf][fr.lay - 1][fr.bitrate_index],
                 freqs[fr.sampling_frequency],
-                modes[fr.mode]);
+                modes[fr.mode]);*/
         }
 
         internal int getbits(MPGLib.mpstr_tag mp, int number_of_bits)
@@ -397,7 +397,7 @@ namespace GroovyCodecs.Mp3.Mpg
         {
             if (mp.fsizeold < 0 && backstep > 0)
             {
-                Console.WriteLine("hip: Can't step back %d bytes!\n", backstep);
+                Log.WriteLine("hip: Can't step back %d bytes!\n", backstep);
                 return MPGLib.MP3_ERR;
             }
 

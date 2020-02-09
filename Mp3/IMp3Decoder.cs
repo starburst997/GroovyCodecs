@@ -6,6 +6,6 @@ namespace GroovyCodecs.Mp3
     {
         void close();
 
-        void decode(MemoryStream sampleBuffer, bool playOriginal);
+        int decode(float[] sampleBuffer, bool playOriginal);
     }
 }
