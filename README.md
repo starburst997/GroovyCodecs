@@ -23,3 +23,32 @@ NOTE: this is still alpha code, and the GroovyMp3.dll interface is likely to cha
 
 V0.1.1 (alpha)
 - Added G.711 and G.729 codecs
+
+## Example MP3 Decoding
+
+Let's say you have an array of byte (`bytes`) representing a MP3 file and wants to get the PCM data as an array of float (`samples`), you can do it like this:
+
+From my own test, it seems to be able to get more accurate data tham [MP3Sharp](https://github.com/ZaneDubya/MP3Sharp) or [NLayer](https://github.com/naudio/NLayer)
+
+```csharp
+Stream stream = new MemoryStream(bytes);
+var decoder = new Mp3Decoder(stream);
+
+float[] samples = new float[decoder.Length * decoder.Channels];
+float[] buffer = new float[4096];
+
+int n = 0;
+int samplesReturned = 1;
+while (samplesReturned > 0)
+{
+    samplesReturned = decoder.decode(buffer, true);
+
+    for (int i = 0; i < samplesReturned; i++)
+    {
+        samples[n++] = buffer[i];
+    }
+}
+
+stream.Dispose();
+decoder.close();
+```
