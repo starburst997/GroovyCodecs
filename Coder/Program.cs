@@ -40,8 +40,6 @@ namespace GroovyCodecs.Coder
     			var outFile = File.Create(file + ".mp3");
     			outFile.Write(outBuffer, 0, len);
     			outFile.Close();
-
-				Log.WriteLine($"Converted {file} to MP3 in {timer.ElapsedMilliseconds / 1000}s");
 			}
 		}
 	}

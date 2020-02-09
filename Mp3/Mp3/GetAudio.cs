@@ -165,8 +165,6 @@ namespace GroovyCodecs.Mp3.Mp3
             }
             catch (FileNotFoundException e)
             {
-                Log.WriteLine(e.ToString());
-                Log.Write(e.StackTrace);
                 return null;
             }
 
@@ -314,17 +312,11 @@ namespace GroovyCodecs.Mp3.Mp3
 
             if (gfp.num_channels != parse.mp3input_data.stereo)
             {
-                if (parse.silent < 10)
-                    Log.WriteLine("Error: number of channels has changed in %s - not supported\n", type_name);
-
                 @out = -1;
             }
 
             if (gfp.in_samplerate != parse.mp3input_data.samplerate)
             {
-                if (parse.silent < 10)
-                    Log.WriteLine("Error: sample frequency has changed in %s - not supported\n", type_name);
-
                 @out = -1;
             }
 
@@ -544,17 +536,11 @@ namespace GroovyCodecs.Mp3.Mp3
             {
                 if (format_tag != WAVE_FORMAT_PCM)
                 {
-                    if (parse.silent < 10)
-                        Log.WriteLine("Unsupported data format: 0x%04X\n", format_tag);
-
                     return 0;
                 }
 
                 if (-1 == (gfp.num_channels = channels))
                 {
-                    if (parse.silent < 10)
-                        Log.WriteLine("Unsupported number of channels: %d\n", channels);
-
                     return 0;
                 }
 
@@ -572,9 +558,6 @@ namespace GroovyCodecs.Mp3.Mp3
         {
             if (pcm_aiff_data.sampleType != IFF_ID_SSND)
             {
-                if (parse.silent < 10)
-                    Log.WriteLine("ERROR: input sound data is not PCM\n");
-
                 return 1;
             }
 
@@ -586,25 +569,16 @@ namespace GroovyCodecs.Mp3.Mp3
                 case 8:
                     break;
                 default:
-                    if (parse.silent < 10)
-                        Log.WriteLine("ERROR: input sound data is not 8, 16, 24 or 32 bits\n");
-
                     return 1;
             }
 
             if (pcm_aiff_data.numChannels != 1 && pcm_aiff_data.numChannels != 2)
             {
-                if (parse.silent < 10)
-                    Log.WriteLine("ERROR: input sound data is not mono or stereo\n");
-
                 return 1;
             }
 
             if (pcm_aiff_data.blkAlgn.blockSize != 0)
             {
-                if (parse.silent < 10)
-                    Log.WriteLine("ERROR: block size of input sound data is not 0 bytes\n");
-
                 return 1;
             }
 
@@ -750,9 +724,6 @@ namespace GroovyCodecs.Mp3.Mp3
 
                 if (-1 == (gfp.num_channels = aiff_info.numChannels))
                 {
-                    if (parse.silent < 10)
-                        Log.WriteLine("Unsupported number of channels: %u\n", aiff_info.numChannels);
-
                     return 0;
                 }
 
@@ -767,9 +738,6 @@ namespace GroovyCodecs.Mp3.Mp3
                     }
                     catch (IOException)
                     {
-                        if (parse.silent < 10)
-                            Log.WriteLine("Can't rewind stream to audio data position\n");
-
                         return 0;
                     }
 
@@ -792,10 +760,6 @@ namespace GroovyCodecs.Mp3.Mp3
                     count_samples_carefully = true;
                     return sound_file_format.sf_wave;
                 }
-
-                if (ret < 0)
-                    if (parse.silent < 10)
-                        Log.WriteLine("Warning: corrupt or unsupported WAVE format");
             }
             else if (type == IFF_ID_FORM)
             {
@@ -805,15 +769,10 @@ namespace GroovyCodecs.Mp3.Mp3
                     count_samples_carefully = true;
                     return sound_file_format.sf_aiff;
                 }
-
-                if (ret < 0)
-                    if (parse.silent < 10)
-                        Log.WriteLine("Warning: corrupt or unsupported AIFF format\n");
             }
             else
             {
-                if (parse.silent < 10)
-                    Log.WriteLine("Warning: unsupported audio format\n");
+                
             }
 
             return sound_file_format.sf_unknown;
@@ -852,15 +811,6 @@ namespace GroovyCodecs.Mp3.Mp3
             }
             else if (parse.input_format == sound_file_format.sf_raw)
             {
-                if (parse.silent < 10)
-                {
-                    Log.WriteLine("Assuming raw pcm input file");
-                    if (parse.swapbytes)
-                        Log.Write(" : Forcing byte-swapping\n");
-                    else
-                        Log.Write("\n");
-                }
-
                 pcmswapbytes = parse.swapbytes;
             }
             else
@@ -976,17 +926,11 @@ namespace GroovyCodecs.Mp3.Mp3
             }
             catch (IOException e)
             {
-                Log.WriteLine(e.ToString());
-                Log.Write(e.StackTrace);
                 return -1;
             }
 
             if (buf[0] == (sbyte)'I' && buf[1] == (sbyte)'D' && buf[2] == (sbyte)'3')
             {
-                if (parse.silent < 10)
-                    Log.WriteLine(
-                        "ID3v2 found. " + "Be aware that the ID3 tag is currently lost when transcoding.");
-
                 len = 6;
                 try
                 {
@@ -994,8 +938,6 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Log.WriteLine(e.ToString());
-                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
@@ -1010,8 +952,6 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Log.WriteLine(e.ToString());
-                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
@@ -1022,8 +962,6 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Log.WriteLine(e.ToString());
-                    Log.Write(e.StackTrace);
                     return -1;
                 }
             }
@@ -1036,14 +974,10 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Log.WriteLine(e.ToString());
-                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
                 var aid_header = (buf[0] & 0xff) + 256 * (buf[1] & 0xff);
-                if (parse.silent < 10)
-                    Log.Write("Album ID found.  length={0:D} \n", aid_header);
 
                 try
                 {
@@ -1051,8 +985,6 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Log.WriteLine(e.ToString());
-                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
@@ -1062,8 +994,6 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Log.WriteLine(e.ToString());
-                    Log.Write(e.StackTrace);
                     return -1;
                 }
             }
@@ -1081,17 +1011,12 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Log.WriteLine(e.ToString());
-                    Log.Write(e.StackTrace);
                     return -1;
                 }
             }
 
             if ((buf[2] & 0xf0) == 0)
             {
-                if (parse.silent < 10)
-                    Log.WriteLine("Input file is freeformat.");
-
                 freeformat = true;
             }
 
@@ -1107,8 +1032,6 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Log.WriteLine(e.ToString());
-                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
@@ -1119,9 +1042,6 @@ namespace GroovyCodecs.Mp3.Mp3
 
             if (mp3data.bitrate == 0 && !freeformat)
             {
-                if (parse.silent < 10)
-                    Log.WriteLine("fail to sync...");
-
                 return lame_decode_initfile(fd, mp3data, enc);
             }
 
@@ -1154,8 +1074,6 @@ namespace GroovyCodecs.Mp3.Mp3
                 }
                 catch (IOException e)
                 {
-                    Log.WriteLine(e.ToString());
-                    Log.Write(e.StackTrace);
                     return -1;
                 }
 
@@ -1222,8 +1140,6 @@ namespace GroovyCodecs.Mp3.Mp3
             }
             catch (IOException e)
             {
-                Log.WriteLine(e.ToString());
-                Log.Write(e.StackTrace);
                 return 0;
             }
         }
@@ -1238,8 +1154,6 @@ namespace GroovyCodecs.Mp3.Mp3
             }
             catch (IOException e)
             {
-                Log.WriteLine(e.ToString());
-                Log.Write(e.StackTrace);
                 return 0;
             }
         }

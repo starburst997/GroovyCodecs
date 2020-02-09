@@ -1398,7 +1398,6 @@ namespace GroovyCodecs.Mp3.Mpg
                 gr_infos.big_values = common.getbits_fast(mp, 9);
                 if (gr_infos.big_values > 288)
                 {
-                    Log.WriteLine("big_values too large! %d\n", gr_infos.big_values);
                     gr_infos.big_values = 288;
                 }
 
@@ -1429,10 +1428,7 @@ namespace GroovyCodecs.Mp3.Mpg
                         if (mp.pinfo != null)
                             mp.pinfo.sub_gain[gr][ch][i] = sbg / 8;
                     }
-
-                    if (gr_infos.block_type == 0)
-                        Log.WriteLine("Blocktype == 0 and window-switching == 1 not allowed.\n");
-
+                    
                     gr_infos.region1start = 36 >> 1;
                     gr_infos.region2start = 576 >> 1;
                 }
@@ -1480,7 +1476,6 @@ namespace GroovyCodecs.Mp3.Mpg
                 gr_infos.big_values = common.getbits_fast(mp, 9);
                 if (gr_infos.big_values > 288)
                 {
-                    Log.WriteLine("big_values too large! %d\n", gr_infos.big_values);
                     gr_infos.big_values = 288;
                 }
 
@@ -1510,9 +1505,6 @@ namespace GroovyCodecs.Mp3.Mpg
                         if (mp.pinfo != null)
                             mp.pinfo.sub_gain[0][ch][i] = sbg / 8;
                     }
-
-                    if (gr_infos.block_type == 0)
-                        Log.WriteLine("Blocktype == 0 and window-switching == 1 not allowed.\n");
 
                     if (gr_infos.block_type == 2)
                         if (sfreq == 8)
@@ -1752,7 +1744,6 @@ namespace GroovyCodecs.Mp3.Mpg
                 for (i = 0; i < 3; i++)
                     if (l[i] < 0)
                     {
-                        Log.WriteLine("hip: Bogus region length (%d)\n", l[i]);
                         l[i] = 0;
                     }
             }
@@ -2154,7 +2145,6 @@ namespace GroovyCodecs.Mp3.Mpg
             }
             else if (part2remain < 0)
             {
-                Log.WriteLine("hip: Can't rewind stream by %d bits!\n", -part2remain);
                 return 1;
             }
 

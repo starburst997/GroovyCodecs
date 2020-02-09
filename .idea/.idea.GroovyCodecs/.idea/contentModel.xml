@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\JD\.Rider2019.3\config\scratches" t="IncludeRecursive" />
+    <e p="C:\Users\JD\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\JD\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_GroovyCodecs.-1097025480.00" t="ExcludeRecursive" />
+    <e p="H:\projects\GroovyCodecs" t="IncludeFlat">
+      <e p="Coder" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="GroovyCodecs.Coder.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Release" t="Include">
+            <e p="netcoreapp2.0" t="Include">
+              <e p="GroovyCodecs.Coder.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+      </e>
+      <e p="G711" t="IncludeRecursive">
+        <e p="aLaw" t="Include">
+          <e p="ALawDecoder.cs" t="Include" />
+          <e p="ALawEncoder.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="GroovyCodecs.G711.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Release" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="GroovyCodecs.G711.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="uLaw" t="Include">
+          <e p="ULawDecoder.cs" t="Include" />
+          <e p="ULawEncoder.cs" t="Include" />
+        </e>
+      </e>
+      <e p="G729" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Codec" t="Include">
+          <e p="AcelpCo.cs" t="Include" />
+          <e p="Bits.cs" t="Include" />
+          <e p="CodLd8k.cs" t="Include" />
+          <e p="CorFunc.cs" t="Include" />
+          <e p="DeAcelp.cs" t="Include" />
+          <e p="DecGain.cs" t="Include" />
+          <e p="DecLag3.cs" t="Include" />
+          <e p="DecLd8k.cs" t="Include" />
+          <e p="Filter.cs" t="Include" />
+          <e p="FloatReference.cs" t="Include" />
+          <e p="Gainpred.cs" t="Include" />
+          <e p="IntReference.cs" t="Include" />
+          <e p="Ld8k.cs" t="Include" />
+          <e p="Lpc.cs" t="Include" />
+          <e p="Lpcfunc.cs" t="Include" />
+          <e p="Lspdec.cs" t="Include" />
+          <e p="Lspgetq.cs" t="Include" />
+          <e p="Pitch.cs" t="Include" />
+          <e p="Postfil.cs" t="Include" />
+          <e p="PostPro.cs" t="Include" />
+          <e p="PParity.cs" t="Include" />
+          <e p="PredLt3.cs" t="Include" />
+          <e p="PreProc.cs" t="Include" />
+          <e p="Pwf.cs" t="Include" />
+          <e p="QuaGain.cs" t="Include" />
+          <e p="QuaLsp.cs" t="Include" />
+          <e p="TabLd8k.cs" t="Include" />
+          <e p="Taming.cs" t="Include" />
+          <e p="Util.cs" t="Include" />
+        </e>
+        <e p="Conversion.txt" t="Include" />
+        <e p="G729Decoder.cs" t="Include" />
+        <e p="G729Encoder.cs" t="Include" />
+        <e p="GroovyCodecs.G729.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Release" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="GroovyCodecs.G729.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="GroovyCodecs.sln" t="IncludeFlat" />
+      <e p="Mp3" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Common" t="Include">
+          <e p="Arrays.cs" t="Include" />
+        </e>
+        <e p="GroovyCodecs.Mp3.csproj" t="IncludeRecursive" />
+        <e p="IMp3Decoder.cs" t="Include" />
+        <e p="IMp3Encoder.cs" t="Include" />
+        <e p="Mp3" t="Include">
+          <e p="ABRIterationLoop.cs" t="Include" />
+          <e p="ABRPresets.cs" t="Include" />
+          <e p="ATH.cs" t="Include" />
+          <e p="BitStream.cs" t="Include" />
+          <e p="CalcNoiseData.cs" t="Include" />
+          <e p="CalcNoiseResult.cs" t="Include" />
+          <e p="CBRNewIterationLoop.cs" t="Include" />
+          <e p="Enc.cs" t="Include" />
+          <e p="Encoder.cs" t="Include" />
+          <e p="FFT.cs" t="Include" />
+          <e p="FrameDataNode.cs" t="Include" />
+          <e p="GainAnalysis.cs" t="Include" />
+          <e p="GenreListHandler.cs" t="Include" />
+          <e p="GetAudio.cs" t="Include" />
+          <e p="GrInfo.cs" t="Include" />
+          <e p="HuffCodeTab.cs" t="Include" />
+          <e p="ID3Tag.cs" t="Include" />
+          <e p="ID3TagSpec.cs" t="Include" />
+          <e p="III_psy_ratio.cs" t="Include" />
+          <e p="III_psy_xmin.cs" t="Include" />
+          <e p="IIISideInfo.cs" t="Include" />
+          <e p="IIterationLoop.cs" t="Include" />
+          <e p="Inf.cs" t="Include" />
+          <e p="L3Side.cs" t="Include" />
+          <e p="Lame.cs" t="Include" />
+          <e p="LameGlobalFlags.cs" t="Include" />
+          <e p="LameInternalFlags.cs" t="Include" />
+          <e p="LongBlockConstrain.cs" t="Include" />
+          <e p="MeanBits.cs" t="Include" />
+          <e p="MP3Data.cs" t="Include" />
+          <e p="MPEGMode.cs" t="Include" />
+          <e p="NewMDCT.cs" t="Include" />
+          <e p="NsPsy.cs" t="Include" />
+          <e p="Parse.cs" t="Include" />
+          <e p="PlottingData.cs" t="Include" />
+          <e p="Presets.cs" t="Include" />
+          <e p="PSY.cs" t="Include" />
+          <e p="PsyModel.cs" t="Include" />
+          <e p="Quantize.cs" t="Include" />
+          <e p="QuantizePVT.cs" t="Include" />
+          <e p="ReplayGain.cs" t="Include" />
+          <e p="Reservoir.cs" t="Include" />
+          <e p="ScaleFac.cs" t="Include" />
+          <e p="ShortBlock.cs" t="Include" />
+          <e p="ShortBlockConstrain.cs" t="Include" />
+          <e p="Tables.cs" t="Include" />
+          <e p="Takehiro.cs" t="Include" />
+          <e p="Util.cs" t="Include" />
+          <e p="VbrMode.cs" t="Include" />
+          <e p="VBRNewIterationLoop.cs" t="Include" />
+          <e p="VBROldIterationLoop.cs" t="Include" />
+          <e p="VBRPresets.cs" t="Include" />
+          <e p="VBRQuantize.cs" t="Include" />
+          <e p="VBRSeekInfo.cs" t="Include" />
+          <e p="VBRTag.cs" t="Include" />
+          <e p="VBRTagData.cs" t="Include" />
+        </e>
+        <e p="Mp3Decoder.cs" t="Include" />
+        <e p="Mp3Encoder.cs" t="Include" />
+        <e p="Mpg" t="Include">
+          <e p="Common.cs" t="Include" />
+          <e p="DCT64.cs" t="Include" />
+          <e p="Decode.cs" t="Include" />
+          <e p="Frame.cs" t="Include" />
+          <e p="Huffman.cs" t="Include" />
+          <e p="Interface.cs" t="Include" />
+          <e p="L2Tables.cs" t="Include" />
+          <e p="Layer1.cs" t="Include" />
+          <e p="Layer2.cs" t="Include" />
+          <e p="Layer3.cs" t="Include" />
+          <e p="MPG123.cs" t="Include" />
+          <e p="MPGLib.cs" t="Include" />
+          <e p="TabInit.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Release" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="GroovyCodecs.Mp3.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Types" t="IncludeRecursive">
+        <e p="AudioFormat.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ByteOrder.cs" t="Include" />
+        <e p="GroovyCodecs.Types.csproj" t="IncludeRecursive" />
+        <e p="MimeType.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Release" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="GroovyCodecs.Types.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Version.cs" t="Include" />
+      </e>
+      <e p="WavFile" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="GroovyCodecs.WavFile.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Release" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="GroovyCodecs.WavFile.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="WavReader.cs" t="Include" />
+      </e>
+    </e>
+  </component>
+</project>

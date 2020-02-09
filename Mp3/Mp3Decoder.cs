@@ -53,6 +53,8 @@ namespace GroovyCodecs.Mp3
         public int WavSize;
 
         public int Length;
+
+        public int Channels;
         
         public Mp3Decoder(Stream mp3Stream)
         {
@@ -115,13 +117,6 @@ namespace GroovyCodecs.Mp3
             var skip_start = 0;
             var skip_end = 0;
 
-            if (parse.silent < 10)
-                Log.Write(
-                    "\rinput:  {0}{1}({2:g} kHz, {3:D} channel{4}, ",
-                    gfp.in_samplerate / 1000,
-                    gfp.num_channels,
-                    gfp.num_channels != 1 ? "s" : "");
-
             if (enc.enc_delay > -1 || enc.enc_padding > -1)
             {
                 if (enc.enc_delay > -1)
@@ -135,20 +130,11 @@ namespace GroovyCodecs.Mp3
                 skip_start = gfp.encoder_delay + 528 + 1;
             }
 
-            Log.Write("MPEG-{0:D}{1} Layer {2}", 2 - gfp.version, gfp.out_samplerate < 16000 ? ".5" : "", "III");
-
-            Log.Write(")\noutput: (16 bit, Microsoft WAVE)\n");
-
-            if (skip_start > 0)
-                Log.Write("skipping initial {0:D} samples (encoder+decoder delay)\n", skip_start);
-
-            if (skip_end > 0)
-                Log.Write("skipping final {0:D} samples (encoder padding-decoder delay)\n", skip_end);
-
             WavSize = -(skip_start + skip_end);
             parse.mp3input_data.totalframes = parse.mp3input_data.nsamp / parse.mp3input_data.framesize;
 
             Length = parse.mp3input_data.nsamp;
+            Channels = gfp.num_channels;
             
             Debug.Assert(gfp.num_channels >= 1 && gfp.num_channels <= 2);
         }
@@ -176,22 +162,6 @@ namespace GroovyCodecs.Mp3
                         sampleBuffer[i] = buffer[0][i] / 32768f;
                     }
                 }
-
-                /*for (var i = 0; i < iread; i++)
-                {
-                    if (playOriginal)
-                    {
-                        // We put mp3 data into the sample buffer here!
-                        sampleBuffer.WriteByte(unchecked((byte)(buffer[0][i] & 0xff)));
-                        sampleBuffer.WriteByte(unchecked((byte)(((buffer[0][i] & 0xffff) >> 8) & 0xff)));
-                    }
-
-                    if (gfp.num_channels == 2)
-                    {
-                        // gaud.write16BitsLowHigh(outf, buffer[1][i] & 0xffff);
-                        // TODO two channels?
-                    }
-                }*/
 
                 return iread * gfp.num_channels;
             }

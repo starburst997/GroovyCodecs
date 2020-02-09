@@ -466,10 +466,6 @@ namespace GroovyCodecs.Mp3.Mp3
 
                 gfc.h_ptr = (old + 1) & (LameInternalFlags.MAX_HEADER_BUF - 1);
                 gfc.header[gfc.h_ptr].write_timing = gfc.header[old].write_timing + bitsPerFrame;
-
-                if (gfc.h_ptr == gfc.w_ptr)
-                    Log.WriteLine("Error: MAX_HEADER_BUF too small in bitstream.c \n");
-
             }
         }
 
@@ -844,9 +840,6 @@ namespace GroovyCodecs.Mp3.Mp3
 
             total_bytes_output.total += bufByteIdx + 1;
 
-            if (flushbits < 0)
-                Log.WriteLine("strange error flushing buffer ... \n");
-
             return flushbits;
         }
 
@@ -946,38 +939,11 @@ namespace GroovyCodecs.Mp3.Mp3
             l3_side.main_data_begin += (bitsPerFrame - bits) / 8;
 
             /*
-             * compare number of bits needed to clear all buffered mp3 frames with
-             * what we think the resvsize is:
-             */
-            if (compute_flushbits(gfp, new TotalBytes()) != gfc.ResvSize)
-                Log.WriteLine("Internal buffer inconsistency. flushbits <> ResvSize");
-
-            /*
              * compare main_data_begin for the next frame with what we think the
              * resvsize is:
              */
             if (l3_side.main_data_begin * 8 != gfc.ResvSize)
             {
-               /* Log.WriteLine(
-                    "bit reservoir error: \n" + "l3_side.main_data_begin: %d \n" + "Resvoir size:             %d \n" +
-                    "resv drain (post)         %d \n" + "resv drain (pre)          %d \n" +
-                    "header and sideinfo:      %d \n" + "data bits:                %d \n" +
-                    "total bits:               %d (remainder: %d) \n" + "bitsperframe:             %d \n",
-                    8 * l3_side.main_data_begin,
-                    gfc.ResvSize,
-                    l3_side.resvDrain_post,
-                    l3_side.resvDrain_pre,
-                    8 * gfc.sideinfo_len,
-                    bits - l3_side.resvDrain_post - 8 * gfc.sideinfo_len,
-                    bits,
-                    bits % 8,
-                    bitsPerFrame);
-
-                Log.WriteLine("This is a fatal error.  It has several possible causes:");
-                Log.WriteLine("90%%  LAME compiled with buggy version of gcc using advanced optimizations");
-                Log.WriteLine(" 9%%  Your system is overclocked");
-                Log.WriteLine(" 1%%  bug in LAME encoding library");*/
-
                 gfc.ResvSize = l3_side.main_data_begin * 8;
             }
 

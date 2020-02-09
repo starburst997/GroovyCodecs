@@ -579,7 +579,6 @@ namespace GroovyCodecs.Mp3.Mpg
                      * to make sure we do not overflow buffer
                      */
                     int size;
-                    Log.WriteLine("hip: bitstream problem, resyncing skipping %d bytes...\n", bytes);
                     mp.old_free_format = false;
 
                     /* FIXME: correct ??? */
@@ -591,11 +590,6 @@ namespace GroovyCodecs.Mp3.Mpg
                     if (size > MPG123.MAXFRAMESIZE)
                     {
                         /* wordpointer buffer is trashed.  probably cant recover, but try anyway */
-                        Log.WriteLine(
-                            "hip: wordpointer trashed.  size=%i (%i)  bytes=%i \n",
-                            size,
-                            MPG123.MAXFRAMESIZE,
-                            bytes);
                         size = 0;
                         mp.wordpointer = mp.bsspace[mp.bsnum];
                         mp.wordpointerPos = 512;
@@ -721,7 +715,6 @@ namespace GroovyCodecs.Mp3.Mpg
                         layer3.do_layer3(mp, @out, done, synth, tFactory);
                         break;
                     default:
-                        Log.WriteLine("hip: invalid layer %d\n", mp.fr.lay);
                         break;
                 }
 
@@ -768,8 +761,6 @@ namespace GroovyCodecs.Mp3.Mpg
                 mp.wordpointerPos += bytes;
 
                 size = mp.wordpointerPos - 512;
-                if (size > MPG123.MAXFRAMESIZE)
-                    Log.WriteLine("hip: fatal error.  MAXFRAMESIZE not large enough.\n");
 
             }
 
@@ -796,7 +787,6 @@ namespace GroovyCodecs.Mp3.Mpg
         {
             if (osize < 2304)
             {
-                Log.WriteLine("hip: Insufficient memory for decoding buffer %d\n", osize);
                 return MPGLib.MP3_ERR;
             }
 
@@ -818,7 +808,6 @@ namespace GroovyCodecs.Mp3.Mpg
             /* we forbid input with more than 1152 samples per channel for output in unclipped mode */
             if (osize < 1152 * 2)
             {
-                Log.WriteLine("hip: out space too small for unclipped mode\n");
                 return MPGLib.MP3_ERR;
             }
 
