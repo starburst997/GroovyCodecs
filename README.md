@@ -28,8 +28,6 @@ V0.1.1 (alpha)
 
 Let's say you have an array of byte (`bytes`) representing a MP3 file and wants to get the PCM data as an array of float (`samples`), you can do it like this:
 
-From my own test, it seems to be able to get more accurate data tham [MP3Sharp](https://github.com/ZaneDubya/MP3Sharp) or [NLayer](https://github.com/naudio/NLayer)
-
 ```csharp
 Stream stream = new MemoryStream(bytes);
 var decoder = new Mp3Decoder(stream);
@@ -52,3 +50,5 @@ while (samplesReturned > 0)
 stream.Dispose();
 decoder.close();
 ```
+
+From my own test, it seems to be able to get more accurate data tham [MP3Sharp](https://github.com/ZaneDubya/MP3Sharp) or [NLayer](https://github.com/naudio/NLayer)
