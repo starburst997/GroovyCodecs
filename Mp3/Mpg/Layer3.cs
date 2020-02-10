@@ -2864,7 +2864,7 @@ namespace GroovyCodecs.Mp3.Mpg
             MPGLib.mpstr_tag mp,
             T[] pcm_sample,
             MPGLib.ProcessedBytes pcm_point,
-            Interface.ISynth synth,
+            Interface.ISynth<T> synth,
             Decode.Factory<T> tFactory)
         {
             int gr, ch, ss, clip = 0;

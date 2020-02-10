@@ -37,9 +37,9 @@ namespace GroovyCodecs.Mp3.Mpg
     internal class Interface
     {
 
-        internal interface ISynth
+        internal interface ISynth<T>
         {
-            int synth_1to1_mono_ptr<T>(
+            int synth_1to1_mono_ptr(
                 MPGLib.mpstr_tag mp,
                 float[] @in,
                 int inPos,
@@ -47,7 +47,7 @@ namespace GroovyCodecs.Mp3.Mpg
                 MPGLib.ProcessedBytes p,
                 Decode.Factory<T> tFactory);
 
-            int synth_1to1_ptr<T>(
+            int synth_1to1_ptr(
                 MPGLib.mpstr_tag mp,
                 float[] @in,
                 int inPos,
@@ -57,7 +57,7 @@ namespace GroovyCodecs.Mp3.Mpg
                 Decode.Factory<T> tFactory);
         }
 
-        private class ISynthAnonymousInnerClass<T> : ISynth
+        private class ISynthAnonymousInnerClass<T> : ISynth<T>
         {
             private readonly Interface outerInstance;
 
@@ -83,31 +83,31 @@ namespace GroovyCodecs.Mp3.Mpg
                 this.tFactory = tFactory;
             }
 
-            public virtual int synth_1to1_mono_ptr<X>(
+            public virtual int synth_1to1_mono_ptr(
                 MPGLib.mpstr_tag mp,
                 float[] @in,
                 int inPos,
-                X[] @out,
+                T[] @out,
                 MPGLib.ProcessedBytes p,
-                Decode.Factory<X> tFactory)
+                Decode.Factory<T> tFactory)
             {
                 return outerInstance.decode.synth_1to1_mono(mp, @in, inPos, @out, p, tFactory);
             }
 
-            public virtual int synth_1to1_ptr<X>(
+            public virtual int synth_1to1_ptr(
                 MPGLib.mpstr_tag mp,
                 float[] @in,
                 int inPos,
                 int i,
-                X[] @out,
+                T[] @out,
                 MPGLib.ProcessedBytes p,
-                Decode.Factory<X> tFactory)
+                Decode.Factory<T> tFactory)
             {
                 return outerInstance.decode.synth_1to1(mp, @in, inPos, i, @out, p, tFactory);
             }
         }
 
-        private class ISynthAnonymousInnerClass2<T> : ISynth
+        private class ISynthAnonymousInnerClass2<T> : ISynth<T>
         {
             private readonly Interface outerInstance;
 
@@ -133,25 +133,25 @@ namespace GroovyCodecs.Mp3.Mpg
                 this.tFactory = tFactory;
             }
 
-            public virtual int synth_1to1_mono_ptr<X>(
+            public virtual int synth_1to1_mono_ptr(
                 MPGLib.mpstr_tag mp,
                 float[] @in,
                 int inPos,
-                X[] @out,
+                T[] @out,
                 MPGLib.ProcessedBytes p,
-                Decode.Factory<X> tFactory)
+                Decode.Factory<T> tFactory)
             {
                 return outerInstance.decode.synth_1to1_mono_unclipped(mp, @in, inPos, @out, p, tFactory);
             }
 
-            public virtual int synth_1to1_ptr<X>(
+            public virtual int synth_1to1_ptr(
                 MPGLib.mpstr_tag mp,
                 float[] @in,
                 int inPos,
                 int i,
-                X[] @out,
+                T[] @out,
                 MPGLib.ProcessedBytes p,
-                Decode.Factory<X> tFactory)
+                Decode.Factory<T> tFactory)
             {
                 return outerInstance.decode.synth_1to1_unclipped(mp, @in, inPos, i, @out, p, tFactory);
             }
@@ -513,7 +513,7 @@ namespace GroovyCodecs.Mp3.Mpg
             int isize,
             T[] @out,
             MPGLib.ProcessedBytes done,
-            ISynth synth,
+            ISynth<T> synth,
             Decode.Factory<T> tFactory)
         {
             int i, iret, bits, bytes;
@@ -791,7 +791,7 @@ namespace GroovyCodecs.Mp3.Mpg
             }
 
             /* passing pointers to the functions which clip the samples */
-            ISynth synth = new ISynthAnonymousInnerClass<T>(this, mp, @in, @out, tFactory);
+            ISynth<T> synth = new ISynthAnonymousInnerClass<T>(this, mp, @in, @out, tFactory);
             return decodeMP3_clipchoice(mp, @in, bufferPos, isize, @out, done, synth, tFactory);
         }
 
@@ -811,7 +811,7 @@ namespace GroovyCodecs.Mp3.Mpg
                 return MPGLib.MP3_ERR;
             }
 
-            ISynth synth = new ISynthAnonymousInnerClass2<T>(this, mp, @in, @out, tFactory);
+            ISynth<T> synth = new ISynthAnonymousInnerClass2<T>(this, mp, @in, @out, tFactory);
             /* passing pointers to the functions which don't clip the samples */
             return decodeMP3_clipchoice(mp, @in, bufferPos, isize, @out, done, synth, tFactory);
         }
