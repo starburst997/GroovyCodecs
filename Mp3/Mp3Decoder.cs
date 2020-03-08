@@ -56,6 +56,9 @@ namespace GroovyCodecs.Mp3
 
         public int Channels;
         
+        public int SkipStart;
+        public int SkipEnd;
+        
         public Mp3Decoder(Stream mp3Stream)
         {
             // encoder modules
@@ -114,23 +117,23 @@ namespace GroovyCodecs.Mp3
 
             gaud.init_infile(gfp, mp3Stream, enc);
 
-            var skip_start = 0;
-            var skip_end = 0;
+            SkipStart = 0;
+            SkipEnd = 0;
 
             if (enc.enc_delay > -1 || enc.enc_padding > -1)
             {
                 if (enc.enc_delay > -1)
-                    skip_start = enc.enc_delay + 528 + 1;
+                    SkipStart = enc.enc_delay + 528 + 1;
 
                 if (enc.enc_padding > -1)
-                    skip_end = enc.enc_padding - (528 + 1);
+                    SkipEnd = enc.enc_padding - (528 + 1);
             }
             else
             {
-                skip_start = gfp.encoder_delay + 528 + 1;
+                SkipStart = gfp.encoder_delay + 528 + 1;
             }
 
-            WavSize = -(skip_start + skip_end);
+            WavSize = -(SkipStart + SkipEnd);
             parse.mp3input_data.totalframes = parse.mp3input_data.nsamp / parse.mp3input_data.framesize;
 
             Length = parse.mp3input_data.nsamp;
