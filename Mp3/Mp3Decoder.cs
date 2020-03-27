@@ -50,6 +50,8 @@ namespace GroovyCodecs.Mp3
 
         private readonly Mp3Version ver;
 
+        public int SampleRate;
+
         public int WavSize;
 
         public int Length;
@@ -136,6 +138,7 @@ namespace GroovyCodecs.Mp3
             WavSize = -(SkipStart + SkipEnd);
             parse.mp3input_data.totalframes = parse.mp3input_data.nsamp / parse.mp3input_data.framesize;
 
+            SampleRate = parse.mp3input_data.samplerate;
             Length = parse.mp3input_data.nsamp;
             Channels = gfp.num_channels;
             
