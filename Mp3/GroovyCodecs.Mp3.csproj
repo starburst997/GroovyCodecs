@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <PackOnBuild>true</PackOnBuild>
     <PackageVersion>0.1.2</PackageVersion>
     <Authors>Jon Gooch</Authors>
     <PackageProjectUrl>https://github.com/jongoochgithub/GroovyCodecs</PackageProjectUrl>
     <Description>A C# native implementation of an MP3 encoder / decoder, based on LAME and Jump3r.</Description>
     <PackageId>GroovyMp3</PackageId>
+    <TargetFrameworks>net46;netstandard2.0;netcoreapp3.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
