@@ -147,6 +147,11 @@ namespace GroovyCodecs.Mp3
 
         public virtual int decode(float[] sampleBuffer, bool playOriginal)
         {
+            return decode(sampleBuffer, 0);
+        }
+        
+        public virtual int decode(float[] sampleBuffer, int offset = 0)
+        {
             var iread = gaud.get_audio16(gfp, buffer); // TODO: Could I get float directly instead of using 16bit?
             if (iread >= 0)
             {
@@ -155,17 +160,25 @@ namespace GroovyCodecs.Mp3
 
                 if (gfp.num_channels == 2)
                 {
-                    for (var i = 0; i < iread; i++)
+                    var max = iread;
+                    if (max * 2 + offset > sampleBuffer.Length)
+                        max = (sampleBuffer.Length - offset) / 2;
+                    
+                    for (var i = 0; i < max; i++)
                     {
-                        sampleBuffer[i*2] = buffer[0][i] / 32768f;
-                        sampleBuffer[i*2 + 1] = buffer[1][i] / 32768f;
+                        sampleBuffer[i*2 + offset] = buffer[0][i] / 32768f;
+                        sampleBuffer[i*2 + 1 + offset] = buffer[1][i] / 32768f;
                     }
                 }
                 else
                 {
-                    for (var i = 0; i < iread; i++)
+                    var max = iread;
+                    if (max + offset > sampleBuffer.Length)
+                        max = sampleBuffer.Length - offset;
+                    
+                    for (var i = 0; i < max; i++)
                     {
-                        sampleBuffer[i] = buffer[0][i] / 32768f;
+                        sampleBuffer[i + offset] = buffer[0][i] / 32768f;
                     }
                 }
 
