@@ -172,7 +172,7 @@ namespace GroovyCodecs.Mp3.Mpg
             }
         }
 
-        private class FactoryAnonymousInnerClass : Decode.Factory<float?>
+        private class FactoryAnonymousInnerClass : Decode.Factory<float>
         {
             private readonly MPGLib outerInstance;
 
@@ -181,7 +181,7 @@ namespace GroovyCodecs.Mp3.Mpg
                 this.outerInstance = outerInstance;
             }
 
-            public float? create(float x)
+            public float create(float x)
             {
                 return Convert.ToSingle(x);
             }
@@ -210,7 +210,7 @@ namespace GroovyCodecs.Mp3.Mpg
             }
         }
 
-        private class FactoryAnonymousInnerClass2 : Decode.Factory<short?>
+        private class FactoryAnonymousInnerClass2 : Decode.Factory<short>
         {
             private readonly MPGLib outerInstance;
 
@@ -219,7 +219,7 @@ namespace GroovyCodecs.Mp3.Mpg
                 this.outerInstance = outerInstance;
             }
 
-            public short? create(float x)
+            public short create(float x)
             {
                 return Convert.ToInt16((short)x);
             }
@@ -454,26 +454,17 @@ namespace GroovyCodecs.Mp3.Mpg
             if (hip != null)
             {
                 IDecoder dec = new IDecoderAnonymousInnerClass(this, bufferPos);
-                var @out = new float?[OUTSIZE_UNCLIPPED];
-                Decode.Factory<float?> tFactory = new FactoryAnonymousInnerClass(this);
-
-                // XXX should we avoid the primitive type version?
-                var pcmL = new float?[pcm_l.Length];
-                for (var i = 0; i < pcmL.Length; i++)
-                    pcmL[i] = Convert.ToSingle(pcm_l[i]);
-
-                var pcmR = new float?[pcm_r.Length];
-                for (var i = 0; i < pcmR.Length; i++)
-                    pcmR[i] = Convert.ToSingle(pcm_r[i]);
+                var @out = new float[OUTSIZE_UNCLIPPED];
+                Decode.Factory<float> tFactory = new FactoryAnonymousInnerClass(this);
 
                 var decode1_headersB_clipchoice = this.decode1_headersB_clipchoice(
                     hip,
                     buffer,
                     bufferPos,
                     len,
-                    pcmL,
+                    pcm_l,
                     0,
-                    pcmR,
+                    pcm_r,
                     0,
                     mp3data,
                     enc,
@@ -481,12 +472,7 @@ namespace GroovyCodecs.Mp3.Mpg
                     OUTSIZE_UNCLIPPED,
                     dec,
                     tFactory);
-                for (var i = 0; i < pcmL.Length; i++)
-                    pcm_l[i] = pcmL[i].Value;
-
-                for (var i = 0; i < pcmR.Length; i++)
-                    pcm_r[i] = pcmR[i].Value;
-
+                
                 return decode1_headersB_clipchoice;
             }
 
@@ -524,26 +510,17 @@ namespace GroovyCodecs.Mp3.Mpg
             if (hip != null)
             {
                 IDecoder dec = new IDecoderAnonymousInnerClass2(this);
-                var @out = new short?[OUTSIZE_CLIPPED];
-                Decode.Factory<short?> tFactory = new FactoryAnonymousInnerClass2(this);
-
-                // XXX should we avoid the primitive type version?
-                var pcmL = new short?[pcm_l.Length];
-                for (var i = 0; i < pcmL.Length; i++)
-                    pcmL[i] = Convert.ToInt16(pcm_l[i]);
-
-                var pcmR = new short?[pcm_r.Length];
-                for (var i = 0; i < pcmR.Length; i++)
-                    pcmR[i] = Convert.ToInt16(pcm_r[i]);
+                var @out = new short[OUTSIZE_CLIPPED];
+                Decode.Factory<short> tFactory = new FactoryAnonymousInnerClass2(this);
 
                 var decode1_headersB_clipchoice = this.decode1_headersB_clipchoice(
                     hip,
                     buffer,
                     0,
                     len,
-                    pcmL,
+                    pcm_l,
                     0,
-                    pcmR,
+                    pcm_r,
                     0,
                     mp3data,
                     enc,
@@ -551,12 +528,7 @@ namespace GroovyCodecs.Mp3.Mpg
                     OUTSIZE_CLIPPED,
                     dec,
                     tFactory);
-                for (var i = 0; i < pcmL.Length; i++)
-                    pcm_l[i] = pcmL[i].Value;
-
-                for (var i = 0; i < pcmR.Length; i++)
-                    pcm_r[i] = pcmR[i].Value;
-
+                
                 return decode1_headersB_clipchoice;
             }
 

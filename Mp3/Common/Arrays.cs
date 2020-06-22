@@ -40,8 +40,8 @@ namespace GroovyCodecs.Mp3.Common
             {
                 newArray[array1] = new T[size2][];
 				if (size3 > 0)
-                for (var array2 = 0; array2 < size2; array2++)
-                    newArray[array1][array2] = new T[size3];
+                    for (var array2 = 0; array2 < size2; array2++)
+                        newArray[array1][array2] = new T[size3];
             }
 
             return newArray;
