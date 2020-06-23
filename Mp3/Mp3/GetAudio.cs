@@ -196,6 +196,46 @@ namespace GroovyCodecs.Mp3.Mp3
             return get_audio_common(gfp, null, buffer);
         }
 
+        public bool first = true;
+        public int offset = 0;
+        
+        public int FirstFrameOffset = 0;
+        public int LastHeaderPosition = 0;
+        
+        public int seek(LameGlobalFlags gfp)
+        {
+            int samples_read;
+            int framesize;
+            var num_channels = gfp.num_channels;
+            int samples_to_read = framesize = gfp.framesize;
+            
+            if (is_mpeg_file_format(parse.input_format))
+            {
+                if (first)
+                {
+                    first = false;
+                    offset = (int) (musicin.Position - hip.bsize - hip.tail.pos);
+                    FirstFrameOffset = offset;
+                }
+
+                samples_read = lame_decode_fromfile(musicin, null, null, parse.mp3input_data, true);
+
+                LastHeaderPosition = hip.lastHeader + FirstFrameOffset;
+                
+                if (samples_read < 0)
+                    return samples_read;
+            }
+            else
+            {
+                // TODO: Not supported
+                throw new Exception("PCM Seek not supported");
+                
+                samples_read = 0;//ead_samples_pcm(musicin, insamp, num_channels * samples_to_read);
+            }
+
+            return samples_read;
+        }
+
         private int get_audio_common(LameGlobalFlags gfp, int[][] buffer, short[][] buffer16)
         {
             var num_channels = gfp.num_channels;
@@ -302,7 +342,7 @@ namespace GroovyCodecs.Mp3.Mp3
         internal virtual int read_samples_mp3(LameGlobalFlags gfp, Stream musicin, short[][] mpg123pcm)
         {
             int @out;
-            @out = lame_decode_fromfile(musicin, mpg123pcm[0], mpg123pcm[1], parse.mp3input_data);
+            @out = lame_decode_fromfile(musicin, mpg123pcm[0], mpg123pcm[1], parse.mp3input_data, false);
             if (@out < 0)
             {
                 Arrays.Fill(mpg123pcm[0], (short)0);
@@ -1020,7 +1060,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 freeformat = true;
             }
 
-            var ret = mpg.hip_decode1_headersB(hip, buf, len, pcm_l, pcm_r, mp3data, enc);
+            var ret = mpg.hip_decode1_headersB(hip, buf, len, pcm_l, pcm_r, mp3data, enc, false);
             if (-1 == ret)
                 return -1;
 
@@ -1035,7 +1075,7 @@ namespace GroovyCodecs.Mp3.Mp3
                     return -1;
                 }
 
-                ret = mpg.hip_decode1_headersB(hip, buf, buf.Length, pcm_l, pcm_r, mp3data, enc);
+                ret = mpg.hip_decode1_headersB(hip, buf, buf.Length, pcm_l, pcm_r, mp3data, enc, false);
                 if (-1 == ret)
                     return -1;
             }
@@ -1056,13 +1096,14 @@ namespace GroovyCodecs.Mp3.Mp3
             return 0;
         }
 
-        private int lame_decode_fromfile(Stream fd, short[] pcm_l, short[] pcm_r, MP3Data mp3data)
+        public int LastPosition;
+        private int lame_decode_fromfile(Stream fd, short[] pcm_l, short[] pcm_r, MP3Data mp3data, bool seek)
         {
             var ret = 0;
             var len = 0;
             var buf = new byte[1024];
             ret = -1;
-            ret = mpg.hip_decode1_headers(hip, buf, len, pcm_l, pcm_r, mp3data);
+            ret = mpg.hip_decode1_headers(hip, buf, len, pcm_l, pcm_r, mp3data, seek);
             if (ret != 0)
                 return ret;
 
@@ -1079,7 +1120,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
                 if (len <= 0)
                 {
-                    ret = mpg.hip_decode1_headers(hip, buf, 0, pcm_l, pcm_r, mp3data);
+                    ret = mpg.hip_decode1_headers(hip, buf, 0, pcm_l, pcm_r, mp3data, seek);
                     if (ret <= 0)
                     {
                         mpg.hip_decode_exit(hip);
@@ -1090,7 +1131,7 @@ namespace GroovyCodecs.Mp3.Mp3
                     break;
                 }
 
-                ret = mpg.hip_decode1_headers(hip, buf, len, pcm_l, pcm_r, mp3data);
+                ret = mpg.hip_decode1_headers(hip, buf, len, pcm_l, pcm_r, mp3data, seek);
                 if (ret == -1)
                 {
                     mpg.hip_decode_exit(hip);

@@ -65,6 +65,10 @@ namespace GroovyCodecs.Mp3.Mpg
         internal class mpstr_tag
         {
 
+            public int total;
+
+            public int lastHeader;
+            
             internal int bitindex;
 
             internal int bsize;
@@ -143,7 +147,8 @@ namespace GroovyCodecs.Mp3.Mpg
                 T[] @out,
                 int osize,
                 ProcessedBytes done,
-                Decode.Factory<T> tFactory);
+                Decode.Factory<T> tFactory,
+                bool seek);
         }
 
         private class IDecoderAnonymousInnerClass : IDecoder
@@ -166,9 +171,10 @@ namespace GroovyCodecs.Mp3.Mpg
                 X[] @out,
                 int osize,
                 ProcessedBytes done,
-                Decode.Factory<X> tFactory)
+                Decode.Factory<X> tFactory,
+                bool seek)
             {
-                return outerInstance.interf.decodeMP3_unclipped(mp, @in, bufferPos, isize, @out, osize, done, tFactory);
+                return outerInstance.interf.decodeMP3_unclipped(mp, @in, bufferPos, isize, @out, osize, done, tFactory, seek);
             }
         }
 
@@ -204,9 +210,10 @@ namespace GroovyCodecs.Mp3.Mpg
                 X[] @out,
                 int osize,
                 ProcessedBytes done,
-                Decode.Factory<X> tFactory)
+                Decode.Factory<X> tFactory,
+                bool seek)
             {
-                return outerInstance.interf.decodeMP3(mp, @in, bufferPos, isize, @out, osize, done, tFactory);
+                return outerInstance.interf.decodeMP3(mp, @in, bufferPos, isize, @out, osize, done, tFactory, seek);
             }
         }
 
@@ -319,17 +326,23 @@ namespace GroovyCodecs.Mp3.Mpg
             T[] p,
             int psize,
             IDecoder decodeMP3_ptr,
-            Decode.Factory<T> tFactory)
+            Decode.Factory<T> tFactory,
+            bool seek)
         {
-
             int processed_samples; // processed samples per channel
             int ret;
 
             mp3data.header_parsed = false;
 
             var pb = new ProcessedBytes();
-            ret = decodeMP3_ptr.decode(pmp, buffer, bufferPos, len, p, psize, pb, tFactory);
+            ret = decodeMP3_ptr.decode(pmp, buffer, bufferPos, len, p, psize, pb, tFactory, seek);
+
+            // When seeking, cheats and use framesize
+            if (seek) pb.pb = mp3data.framesize;
+            if (seek && pmp.fr.stereo == 2) pb.pb <<= 1;
+            
             processed_samples = pb.pb;
+            
             /* three cases:  
              * 1. headers parsed, but data not complete
              *       pmp.header_parsed==1 
@@ -383,11 +396,11 @@ namespace GroovyCodecs.Mp3.Mpg
                     switch (pmp.fr.stereo)
                     {
                         case 1:
-                            COPY_MONO(pcm_l, pcm_lPos, processed_samples, p);
+                            if (!seek) COPY_MONO(pcm_l, pcm_lPos, processed_samples, p);
                             break;
                         case 2:
                             processed_samples = processed_samples >> 1;
-                            COPY_STEREO(pcm_l, pcm_lPos, pcm_r, pcm_rPos, processed_samples, p);
+                            if (!seek) COPY_STEREO(pcm_l, pcm_lPos, pcm_r, pcm_rPos, processed_samples, p);
                             break;
                         default:
                             processed_samples = -1;
@@ -471,7 +484,8 @@ namespace GroovyCodecs.Mp3.Mpg
                     @out,
                     OUTSIZE_UNCLIPPED,
                     dec,
-                    tFactory);
+                    tFactory,
+                    false);
                 
                 return decode1_headersB_clipchoice;
             }
@@ -492,10 +506,11 @@ namespace GroovyCodecs.Mp3.Mpg
             int len,
             short[] pcm_l,
             short[] pcm_r,
-            MP3Data mp3data)
+            MP3Data mp3data,
+            bool seek)
         {
             var enc = new Enc();
-            return hip_decode1_headersB(hip, buffer, len, pcm_l, pcm_r, mp3data, enc);
+            return hip_decode1_headersB(hip, buffer, len, pcm_l, pcm_r, mp3data, enc, seek);
         }
 
         internal virtual int hip_decode1_headersB(
@@ -505,12 +520,13 @@ namespace GroovyCodecs.Mp3.Mpg
             short[] pcm_l,
             short[] pcm_r,
             MP3Data mp3data,
-            Enc enc)
+            Enc enc,
+            bool seek)
         {
             if (hip != null)
             {
                 IDecoder dec = new IDecoderAnonymousInnerClass2(this);
-                var @out = new short[OUTSIZE_CLIPPED];
+                var @out = seek ? null : new short[OUTSIZE_CLIPPED];
                 Decode.Factory<short> tFactory = new FactoryAnonymousInnerClass2(this);
 
                 var decode1_headersB_clipchoice = this.decode1_headersB_clipchoice(
@@ -527,7 +543,8 @@ namespace GroovyCodecs.Mp3.Mpg
                     @out,
                     OUTSIZE_CLIPPED,
                     dec,
-                    tFactory);
+                    tFactory,
+                    seek);
                 
                 return decode1_headersB_clipchoice;
             }

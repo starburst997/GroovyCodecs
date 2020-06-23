@@ -293,6 +293,7 @@ namespace GroovyCodecs.Mp3.Mpg
             b = mp.tail.pnt[pos] & 0xff;
             mp.bsize--;
             mp.tail.pos++;
+            mp.total++;
 
             return b;
         }
@@ -327,6 +328,7 @@ namespace GroovyCodecs.Mp3.Mpg
                 Array.Copy(mp.tail.pnt, mp.tail.pos, ptr, ptrPos + len, nlen);
                 len += nlen;
                 mp.tail.pos += nlen;
+                mp.total += nlen;
                 mp.bsize -= nlen;
                 if (mp.tail.pos == mp.tail.size)
                     remove_buf(mp);
@@ -514,7 +516,8 @@ namespace GroovyCodecs.Mp3.Mpg
             T[] @out,
             MPGLib.ProcessedBytes done,
             ISynth<T> synth,
-            Decode.Factory<T> tFactory)
+            Decode.Factory<T> tFactory,
+            bool seek)
         {
             int i, iret, bits, bytes;
 
@@ -533,7 +536,7 @@ namespace GroovyCodecs.Mp3.Mpg
                     /* This is the very first call.   sync with anything */
                     /* bytes= number of bytes before header */
                     bytes = sync_buffer(mp, false);
-
+                    
                     /* now look for Xing VBR header */
                     if (mp.bsize >= bytes + XING_HEADER_SIZE)
                         vbrbytes = check_vbr_header(mp, bytes);
@@ -609,6 +612,8 @@ namespace GroovyCodecs.Mp3.Mpg
                     mp.fsizeold += bytes;
                 }
 
+                mp.lastHeader = mp.total;
+                
                 read_head(mp);
                 common.decode_header(mp.fr, mp.header);
                 mp.header_parsed = true;
@@ -701,18 +706,18 @@ namespace GroovyCodecs.Mp3.Mpg
                         if (mp.fr.error_protection)
                             common.getbits(mp, 16);
 
-                        layer1.do_layer1(mp, @out, done, tFactory);
+                        if (!seek) layer1.do_layer1(mp, @out, done, tFactory);
                         break;
 
                     case 2:
                         if (mp.fr.error_protection)
                             common.getbits(mp, 16);
 
-                        layer2.do_layer2(mp, @out, done, synth, tFactory);
+                        if (!seek) layer2.do_layer2(mp, @out, done, synth, tFactory);
                         break;
 
                     case 3:
-                        layer3.do_layer3(mp, @out, done, synth, tFactory);
+                        if (!seek) layer3.do_layer3(mp, @out, done, synth, tFactory);
                         break;
                     default:
                         break;
@@ -721,6 +726,8 @@ namespace GroovyCodecs.Mp3.Mpg
                 mp.wordpointer = mp.bsspace[mp.bsnum];
                 mp.wordpointerPos = 512 + mp.ssize + mp.dsize;
 
+                if (seek) done.pb += mp.framesize;
+                
                 mp.data_parsed = true;
                 iret = MPGLib.MP3_OK;
             }
@@ -737,6 +744,7 @@ namespace GroovyCodecs.Mp3.Mpg
                 else
                 {
                     bytes = sync_buffer(mp, true);
+                    
                     if (bytes < 0)
                         return iret;
 
@@ -783,7 +791,8 @@ namespace GroovyCodecs.Mp3.Mpg
             T[] @out,
             int osize,
             MPGLib.ProcessedBytes done,
-            Decode.Factory<T> tFactory)
+            Decode.Factory<T> tFactory,
+            bool seek)
         {
             if (osize < 2304)
             {
@@ -792,7 +801,7 @@ namespace GroovyCodecs.Mp3.Mpg
 
             /* passing pointers to the functions which clip the samples */
             ISynth<T> synth = new ISynthAnonymousInnerClass<T>(this, mp, @in, @out, tFactory);
-            return decodeMP3_clipchoice(mp, @in, bufferPos, isize, @out, done, synth, tFactory);
+            return decodeMP3_clipchoice(mp, @in, bufferPos, isize, @out, done, synth, tFactory, seek);
         }
 
         internal virtual int decodeMP3_unclipped<T>(
@@ -803,7 +812,8 @@ namespace GroovyCodecs.Mp3.Mpg
             T[] @out,
             int osize,
             MPGLib.ProcessedBytes done,
-            Decode.Factory<T> tFactory)
+            Decode.Factory<T> tFactory,
+            bool seek)
         {
             /* we forbid input with more than 1152 samples per channel for output in unclipped mode */
             if (osize < 1152 * 2)
@@ -813,7 +823,7 @@ namespace GroovyCodecs.Mp3.Mpg
 
             ISynth<T> synth = new ISynthAnonymousInnerClass2<T>(this, mp, @in, @out, tFactory);
             /* passing pointers to the functions which don't clip the samples */
-            return decodeMP3_clipchoice(mp, @in, bufferPos, isize, @out, done, synth, tFactory);
+            return decodeMP3_clipchoice(mp, @in, bufferPos, isize, @out, done, synth, tFactory, seek);
         }
     }
 

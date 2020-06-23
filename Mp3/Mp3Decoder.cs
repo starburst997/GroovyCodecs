@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -149,10 +150,25 @@ namespace GroovyCodecs.Mp3
         {
             return decode(sampleBuffer, 0);
         }
+
+        public virtual int seek(int offset)
+        {
+            var iread = gaud.seek(gfp);
+            if (iread >= 0)
+            {
+                parse.mp3input_data.framenum += iread / parse.mp3input_data.framesize;
+                WavSize += iread;
+
+                return iread * gfp.num_channels;
+            }
+
+            return -1;
+        }
         
-        public virtual int decode(float[] sampleBuffer, int offset = 0)
+        public virtual int decode(float[] sampleBuffer, int offset = 0, int offset2 = 0)
         {
             var iread = gaud.get_audio16(gfp, buffer); // TODO: Could I get float directly instead of using 16bit?
+
             if (iread >= 0)
             {
                 parse.mp3input_data.framenum += iread / parse.mp3input_data.framesize;
@@ -161,24 +177,30 @@ namespace GroovyCodecs.Mp3
                 if (gfp.num_channels == 2)
                 {
                     var max = iread;
-                    if (max * 2 + offset > sampleBuffer.Length)
-                        max = (sampleBuffer.Length - offset) / 2;
+                    if (max * 2 + offset + offset2 > sampleBuffer.Length)
+                        max = (sampleBuffer.Length - offset - offset2) / 2;
                     
-                    for (var i = 0; i < max; i++)
+                    var start = 0;
+                    if (offset < 0) start = Math.Abs(offset) / 2;
+                    
+                    for (var i = start; i < max; i++)
                     {
-                        sampleBuffer[i*2 + offset] = buffer[0][i] / 32768f;
-                        sampleBuffer[i*2 + 1 + offset] = buffer[1][i] / 32768f;
+                        sampleBuffer[i*2 + offset + offset2] = buffer[0][i] / 32768f;
+                        sampleBuffer[i*2 + 1 + offset + offset2] = buffer[1][i] / 32768f;
                     }
                 }
                 else
                 {
                     var max = iread;
-                    if (max + offset > sampleBuffer.Length)
-                        max = sampleBuffer.Length - offset;
+                    if (max + offset + offset2 > sampleBuffer.Length)
+                        max = sampleBuffer.Length - offset - offset2;
+
+                    var start = 0;
+                    if (offset < 0) start = Math.Abs(offset);
                     
-                    for (var i = 0; i < max; i++)
+                    for (var i = start; i < max; i++)
                     {
-                        sampleBuffer[i + offset] = buffer[0][i] / 32768f;
+                        sampleBuffer[i + offset + offset2] = buffer[0][i] / 32768f;
                     }
                 }
 
