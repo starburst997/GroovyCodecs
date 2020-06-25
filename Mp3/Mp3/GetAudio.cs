@@ -960,14 +960,11 @@ namespace GroovyCodecs.Mp3.Mp3
 
             hip = mpg.hip_decode_init();
             var len = 4;
-            try
-            {
-                fd.Read(buf, 0, len);
-            }
-            catch (IOException e)
-            {
+            
+            if (fd.Position + len > fd.Length)
                 return -1;
-            }
+            
+            fd.Read(buf, 0, len);
 
             if (buf[0] == (sbyte)'I' && buf[1] == (sbyte)'D' && buf[2] == (sbyte)'3')
             {
