@@ -216,7 +216,7 @@ namespace GroovyCodecs.Mp3.Mpg
 
             tab.make_decode_tables(32767);
 
-            layer3.init_layer3(MPG123.SBLIMIT);
+            Layer3.init_layer3(MPG123.SBLIMIT);
 
             layer2.init_layer2();
 

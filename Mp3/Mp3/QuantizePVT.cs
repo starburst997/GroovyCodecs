@@ -59,7 +59,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
         internal const int Q_MAX2 = 116;
 
-        internal readonly int[][][] nr_of_sfb_block =
+        internal static readonly int[][][] nr_of_sfb_block =
         {
             new[]
             {
@@ -207,7 +207,7 @@ namespace GroovyCodecs.Mp3.Mp3
             }
         };
 
-        internal readonly int[] pretab =
+        internal static readonly int[] pretab =
         {
             0,
             0,
@@ -233,7 +233,7 @@ namespace GroovyCodecs.Mp3.Mp3
             0
         };
 
-        internal readonly ScaleFac[] sfBandIndex =
+        internal static readonly ScaleFac[] sfBandIndex =
         {
             new ScaleFac(
                 new[]
@@ -813,13 +813,13 @@ namespace GroovyCodecs.Mp3.Mp3
                 })
         };
 
-        internal float[] adj43 = new float[PRECALC_SIZE];
+        internal static float[] adj43 = new float[PRECALC_SIZE];
 
-        internal float[] ipow20 = new float[Q_MAX];
+        internal static float[] ipow20 = new float[Q_MAX];
 
-        internal float[] pow20 = new float[Q_MAX + Q_MAX2 + 1];
+        internal static float[] pow20 = new float[Q_MAX + Q_MAX2 + 1];
 
-        internal float[] pow43 = new float[PRECALC_SIZE];
+        internal static float[] pow43 = new float[PRECALC_SIZE];
 
         internal PsyModel psy;
 
@@ -854,18 +854,23 @@ namespace GroovyCodecs.Mp3.Mp3
             return ath;
         }
 
+        private static bool _athSet = false;
+        
         private void compute_ath(LameGlobalFlags gfp)
         {
-
-            var ATH_l = gfp.internal_flags.ATH.l;
-
-            var ATH_psfb21 = gfp.internal_flags.ATH.psfb21;
-
-            var ATH_s = gfp.internal_flags.ATH.s;
-
-            var ATH_psfb12 = gfp.internal_flags.ATH.psfb12;
-
             var gfc = gfp.internal_flags;
+            gfc.ATH.floor = 10.0f * (float)Math.Log10(ATHmdct(gfp, -1.0f));
+            
+            if (_athSet) return;
+            _athSet = true;
+            
+            var ATH_l = ATH.l;
+
+            var ATH_psfb21 = ATH.psfb21;
+
+            var ATH_s = ATH.s;
+
+            var ATH_psfb12 = ATH.psfb12;
 
             float samp_freq = gfp.out_samplerate;
             for (var sfb = 0; sfb < Encoder.SBMAX_l; sfb++)
@@ -942,13 +947,12 @@ namespace GroovyCodecs.Mp3.Mp3
                 for (var sfb = 0; sfb < Encoder.PSFB12; sfb++)
                     ATH_psfb12[sfb] = 1E-20f;
             }
-
-            gfc.ATH.floor = 10.0f * (float)Math.Log10(ATHmdct(gfp, -1.0f));
         }
 
+        private static bool _set = false;
+        
         internal void iteration_init(LameGlobalFlags gfp)
         {
-
             var gfc = gfp.internal_flags;
 
             var l3_side = gfc.l3_side;
@@ -958,19 +962,23 @@ namespace GroovyCodecs.Mp3.Mp3
                 gfc.iteration_init_init = 1;
                 l3_side.main_data_begin = 0;
                 compute_ath(gfp);
-                pow43[0] = 0.0f;
-                for (i = 1; i < PRECALC_SIZE; i++)
-                    pow43[i] = (float)Math.Pow(i, 4.0 / 3.0);
 
-                for (i = 0; i < PRECALC_SIZE - 1; i++)
-                    adj43[i] = (float)(i + 1 - Math.Pow(0.5 * (pow43[i] + pow43[i + 1]), 0.75));
+                if (!_set)
+                {
+                    pow43[0] = 0.0f;
+                    for (i = 1; i < PRECALC_SIZE; i++)
+                        pow43[i] = (float)Math.Pow(i, 4.0 / 3.0);
 
-                adj43[i] = 0.5f;
-                for (i = 0; i < Q_MAX; i++)
-                    ipow20[i] = (float)Math.Pow(2.0, (i - 210) * -0.1875);
+                    for (i = 0; i < PRECALC_SIZE - 1; i++)
+                        adj43[i] = (float)(i + 1 - Math.Pow(0.5 * (pow43[i] + pow43[i + 1]), 0.75));
 
-                for (i = 0; i <= Q_MAX + Q_MAX2; i++)
-                    pow20[i] = (float)Math.Pow(2.0, (i - 210 - Q_MAX2) * 0.25);
+                    adj43[i] = 0.5f;
+                    for (i = 0; i < Q_MAX; i++)
+                        ipow20[i] = (float)Math.Pow(2.0, (i - 210) * -0.1875);
+
+                    for (i = 0; i <= Q_MAX + Q_MAX2; i++)
+                        pow20[i] = (float)Math.Pow(2.0, (i - 210 - Q_MAX2) * 0.25);
+                }
 
                 tak.huffman_init(gfc);
                 {
@@ -1026,6 +1034,8 @@ namespace GroovyCodecs.Mp3.Mp3
                     }
                 }
             }
+
+            _set = true;
         }
 
         internal int on_pe(LameGlobalFlags gfp, float[][] pe, int[] targ_bits, int mean_bits, int gr, int cbr)
@@ -1495,7 +1505,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 else
                     en0 = 0.0f;
 
-                gfc.pinfo.thr[gr][ch][sfb] = en1 * Math.Max(en0 * ratio.thm.l[sfb], gfc.ATH.l[sfb]);
+                gfc.pinfo.thr[gr][ch][sfb] = en1 * Math.Max(en0 * ratio.thm.l[sfb], ATH.l[sfb]);
                 gfc.pinfo.LAMEsfb[gr][ch][sfb] = 0;
                 if (cod_info.preflag != 0 && sfb >= 11)
                     gfc.pinfo.LAMEsfb[gr][ch][sfb] = -ifqstep * pretab[sfb];
@@ -1536,7 +1546,7 @@ namespace GroovyCodecs.Mp3.Mp3
                             en0 = 0;
 
                         gfc.pinfo.thr_s[gr][ch][3 * sfb + i] =
-                            en1 * Math.Max(en0 * ratio.thm.s[sfb][i], gfc.ATH.s[sfb]);
+                            en1 * Math.Max(en0 * ratio.thm.s[sfb][i], ATH.s[sfb]);
                         gfc.pinfo.LAMEsfb_s[gr][ch][3 * sfb + i] = -2.0 * cod_info.subblock_gain[i];
                         if (sfb < Encoder.SBPSY_s)
                             gfc.pinfo.LAMEsfb_s[gr][ch][3 * sfb + i] -= ifqstep * scalefac[sfb2];

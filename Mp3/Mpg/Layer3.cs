@@ -1073,19 +1073,19 @@ namespace GroovyCodecs.Mp3.Mpg
             }
         };
 
-        private readonly float[] aa_ca = new float[8];
+        private static readonly float[] aa_ca = new float[8];
 
-        private readonly float[] aa_cs = new float[8];
+        private static readonly float[] aa_cs = new float[8];
 
         private Common common;
 
-        private readonly float[][] COS1 = Arrays.ReturnRectangularArray<float>(12, 6);
+        private static readonly float[][] COS1 = Arrays.ReturnRectangularArray<float>(12, 6);
 
-        private float COS6_1, COS6_2;
+        private static float COS6_1, COS6_2;
 
-        private readonly float[] COS9 = new float[9];
+        private static readonly float[] COS9 = new float[9];
 
-        private readonly float[] gainpow2 = new float[256 + 118 + 4];
+        private static readonly float[] gainpow2 = new float[256 + 118 + 4];
 
         private readonly float[][] hybridIn =
             Arrays.ReturnRectangularArray<float>(2, MPG123.SBLIMIT * MPG123.SSLIMIT);
@@ -1093,51 +1093,51 @@ namespace GroovyCodecs.Mp3.Mpg
         private readonly float[][] hybridOut =
             Arrays.ReturnRectangularArray<float>(2, MPG123.SSLIMIT * MPG123.SBLIMIT);
 
-        private readonly int[] i_slen2 = new int[256];
+        private static readonly int[] i_slen2 = new int[256];
 
-        private readonly float[] ispow = new float[8207];
+        private static readonly float[] ispow = new float[8207];
 
-        private readonly int[][] longLimit = Arrays.ReturnRectangularArray<int>(9, 23);
+        private static readonly int[][] longLimit = Arrays.ReturnRectangularArray<int>(9, 23);
 
-        private readonly int[][][] map = Arrays.ReturnRectangularArray<int>(9, 3, -1);
+        private static readonly int[][][] map = Arrays.ReturnRectangularArray<int>(9, 3, -1);
 
-        private readonly int[][] mapbuf0 = Arrays.ReturnRectangularArray<int>(9, 152);
+        private static readonly int[][] mapbuf0 = Arrays.ReturnRectangularArray<int>(9, 152);
 
-        private readonly int[][] mapbuf1 = Arrays.ReturnRectangularArray<int>(9, 156);
+        private static readonly int[][] mapbuf1 = Arrays.ReturnRectangularArray<int>(9, 156);
 
-        private readonly int[][] mapbuf2 = Arrays.ReturnRectangularArray<int>(9, 44);
+        private static readonly int[][] mapbuf2 = Arrays.ReturnRectangularArray<int>(9, 44);
 
-        private readonly int[][] mapend = Arrays.ReturnRectangularArray<int>(9, 3);
+        private static readonly int[][] mapend = Arrays.ReturnRectangularArray<int>(9, 3);
 
-        private readonly int[] n_slen2 = new int[512];
+        private static readonly int[] n_slen2 = new int[512];
 
-        private readonly float[][] pow1_1 = Arrays.ReturnRectangularArray<float>(2, 16);
+        private static readonly float[][] pow1_1 = Arrays.ReturnRectangularArray<float>(2, 16);
 
-        private readonly float[][] pow1_2 = Arrays.ReturnRectangularArray<float>(2, 16);
+        private static readonly float[][] pow1_2 = Arrays.ReturnRectangularArray<float>(2, 16);
 
-        private readonly float[][] pow2_1 = Arrays.ReturnRectangularArray<float>(2, 16);
+        private static readonly float[][] pow2_1 = Arrays.ReturnRectangularArray<float>(2, 16);
 
-        private readonly float[][] pow2_2 = Arrays.ReturnRectangularArray<float>(2, 16);
+        private static readonly float[][] pow2_2 = Arrays.ReturnRectangularArray<float>(2, 16);
 
-        private readonly int[][] shortLimit = Arrays.ReturnRectangularArray<int>(9, 14);
+        private static readonly int[][] shortLimit = Arrays.ReturnRectangularArray<int>(9, 14);
 
         private readonly MPG123.III_sideinfo sideinfo = new MPG123.III_sideinfo();
 
-        private readonly float[] tan1_1 = new float[16];
+        private static readonly float[] tan1_1 = new float[16];
 
-        private readonly float[] tan1_2 = new float[16];
+        private static readonly float[] tan1_2 = new float[16];
 
-        private readonly float[] tan2_1 = new float[16];
+        private static readonly float[] tan2_1 = new float[16];
 
-        private readonly float[] tan2_2 = new float[16];
+        private static readonly float[] tan2_2 = new float[16];
 
-        private readonly float[] tfcos12 = new float[3];
+        private static readonly float[] tfcos12 = new float[3];
 
-        private readonly float[] tfcos36 = new float[9];
+        private static readonly float[] tfcos36 = new float[9];
 
-        private readonly float[][] win = Arrays.ReturnRectangularArray<float>(4, 36);
+        private static readonly float[][] win = Arrays.ReturnRectangularArray<float>(4, 36);
 
-        private readonly float[][] win1 = Arrays.ReturnRectangularArray<float>(4, 36);
+        private static readonly float[][] win1 = Arrays.ReturnRectangularArray<float>(4, 36);
 
         internal virtual Common Modules
         {
@@ -1154,8 +1154,12 @@ namespace GroovyCodecs.Mp3.Mpg
             return rval >> 7;
         }
 
-        internal virtual void init_layer3(int down_sample_sblimit)
+        private static bool _init = false;
+        static internal void init_layer3(int down_sample_sblimit)
         {
+            if (_init) return;
+            _init = true;
+            
             for (var i = -256; i < 118 + 4; i++)
                 gainpow2[i + 256] = (float)Math.Pow(2.0, -0.25 * (i + 210));
 

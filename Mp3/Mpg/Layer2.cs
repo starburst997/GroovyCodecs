@@ -195,7 +195,7 @@ namespace GroovyCodecs.Mp3.Mpg
             }
         };
 
-        private readonly int[][] @base =
+        private static readonly int[][] @base =
         {
             new[]
             {
@@ -225,13 +225,13 @@ namespace GroovyCodecs.Mp3.Mpg
             }
         };
 
-        private readonly int[] grp_3tab = new int[32 * 3]; // used: 27
+        private static readonly int[] grp_3tab = new int[32 * 3]; // used: 27
 
-        private readonly int[] grp_5tab = new int[128 * 3]; // used: 125
+        private static readonly int[] grp_5tab = new int[128 * 3]; // used: 125
 
-        private readonly int[] grp_9tab = new int[1024 * 3]; // used: 729
+        private static readonly int[] grp_9tab = new int[1024 * 3]; // used: 729
 
-        private readonly int[] sblims =
+        private static readonly int[] sblims =
         {
             27,
             30,
@@ -240,14 +240,14 @@ namespace GroovyCodecs.Mp3.Mpg
             30
         };
 
-        private readonly int[] tablen =
+        private static readonly int[] tablen =
         {
             3,
             5,
             9
         };
 
-        private readonly L2Tables.al_table2[][] tables2 =
+        private static readonly L2Tables.al_table2[][] tables2 =
         {
             L2Tables.alloc_0,
             L2Tables.alloc_1,
@@ -260,13 +260,13 @@ namespace GroovyCodecs.Mp3.Mpg
 
         private readonly bool InstanceFieldsInitialized;
 
-        private int itable;
+        private static int itable;
 
         private readonly int[] scfsi_buf = new int[64];
 
-        private int[][] table;
+        private static int[][] table;
 
-        private int[][] tables;
+        private static int[][] tables;
 
         internal virtual Common Modules
         {
@@ -305,31 +305,40 @@ namespace GroovyCodecs.Mp3.Mpg
             };
         }
 
-        internal virtual void init_layer2()
+        private static bool _set = false;
+        
+        internal void init_layer2()
         {
-            int i, j, k, l, len;
-            float[] table;
-
-            for (i = 0; i < 3; i++)
+            if (!_set)
             {
-                itable = 0;
-                len = tablen[i];
-                for (j = 0; j < len; j++)
-                for (k = 0; k < len; k++)
-                for (l = 0; l < len; l++)
+                _set = true;
+                
+                int i, j, k, l, len;
+                
+
+                for (i = 0; i < 3; i++)
                 {
-                    tables[i][itable++] = @base[i][l];
-                    tables[i][itable++] = @base[i][k];
-                    tables[i][itable++] = @base[i][j];
+                    itable = 0;
+                    len = tablen[i];
+                    for (j = 0; j < len; j++)
+                    for (k = 0; k < len; k++)
+                    for (l = 0; l < len; l++)
+                    {
+                        tables[i][itable++] = @base[i][l];
+                        tables[i][itable++] = @base[i][k];
+                        tables[i][itable++] = @base[i][j];
+                    }
                 }
             }
 
-            for (k = 0; k < 27; k++)
+            float[] table;
+            
+            for (int k = 0; k < 27; k++)
             {
                 var m = mulmul[k];
                 table = common.muls[k];
                 var tablePos = 0;
-                for (j = 3, i = 0; i < 63; i++, j--)
+                for (int j = 3, i = 0; i < 63; i++, j--)
                     table[tablePos++] = (float)(m * Math.Pow(2.0, j / 3.0));
 
                 table[tablePos++] = 0.0f;

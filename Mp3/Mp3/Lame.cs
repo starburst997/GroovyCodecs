@@ -1086,7 +1086,7 @@ namespace GroovyCodecs.Mp3.Mp3
             bs.init_bit_stream_w(gfc);
             var j = gfc.samplerate_index + 3 * gfp.version + 6 * (gfp.out_samplerate < 16000 ? 1 : 0);
             for (var i = 0; i < Encoder.SBMAX_l + 1; i++)
-                gfc.scalefac_band.l[i] = qupvt.sfBandIndex[j].l[i];
+                gfc.scalefac_band.l[i] = QuantizePVT.sfBandIndex[j].l[i];
 
             for (var i = 0; i < Encoder.PSFB21 + 1; i++)
             {
@@ -1099,7 +1099,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
             gfc.scalefac_band.psfb21[Encoder.PSFB21] = 576;
             for (var i = 0; i < Encoder.SBMAX_s + 1; i++)
-                gfc.scalefac_band.s[i] = qupvt.sfBandIndex[j].s[i];
+                gfc.scalefac_band.s[i] = QuantizePVT.sfBandIndex[j].s[i];
 
             for (var i = 0; i < Encoder.PSFB12 + 1; i++)
             {

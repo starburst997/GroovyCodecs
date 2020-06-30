@@ -427,13 +427,13 @@ namespace GroovyCodecs.Mp3.Mp3
                 rx1 = (int)x1;
                 x3 = xr[xrPos++] * istep;
                 rx2 = (int)x2;
-                x0 += qupvt.adj43[rx0];
+                x0 += QuantizePVT.adj43[rx0];
                 rx3 = (int)x3;
-                x1 += qupvt.adj43[rx1];
+                x1 += QuantizePVT.adj43[rx1];
                 ix[ixPos++] = (int)x0;
-                x2 += qupvt.adj43[rx2];
+                x2 += QuantizePVT.adj43[rx2];
                 ix[ixPos++] = (int)x1;
-                x3 += qupvt.adj43[rx3];
+                x3 += QuantizePVT.adj43[rx3];
                 ix[ixPos++] = (int)x2;
                 ix[ixPos++] = (int)x3;
             }
@@ -446,8 +446,8 @@ namespace GroovyCodecs.Mp3.Mp3
                 x1 = xr[xrPos++] * istep;
                 rx0 = (int)x0;
                 rx1 = (int)x1;
-                x0 += qupvt.adj43[rx0];
-                x1 += qupvt.adj43[rx1];
+                x0 += QuantizePVT.adj43[rx0];
+                x1 += QuantizePVT.adj43[rx1];
                 ix[ixPos++] = (int)x0;
                 ix[ixPos++] = (int)x1;
             }
@@ -479,7 +479,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 var step = -1;
                 if (prev_data_use || codInfo.block_type == Encoder.NORM_TYPE)
                     step = codInfo.global_gain -
-                           ((codInfo.scalefac[sfb] + (codInfo.preflag != 0 ? qupvt.pretab[sfb] : 0)) <<
+                           ((codInfo.scalefac[sfb] + (codInfo.preflag != 0 ? QuantizePVT.pretab[sfb] : 0)) <<
                             (codInfo.scalefac_scale + 1)) - codInfo.subblock_gain[codInfo.window[sfb]] * 8;
 
                 Debug.Assert(codInfo.width[sfb] >= 0);
@@ -1208,14 +1208,14 @@ namespace GroovyCodecs.Mp3.Mp3
             if (0 == gi.preflag && gi.block_type != Encoder.SHORT_TYPE && gfc.mode_gr == 2)
             {
                 for (sfb = 11; sfb < Encoder.SBPSY_l; sfb++)
-                    if (gi.scalefac[sfb] < qupvt.pretab[sfb] && gi.scalefac[sfb] != -2)
+                    if (gi.scalefac[sfb] < QuantizePVT.pretab[sfb] && gi.scalefac[sfb] != -2)
                         break;
 
                 if (sfb == Encoder.SBPSY_l)
                 {
                     for (sfb = 11; sfb < Encoder.SBPSY_l; sfb++)
                         if (gi.scalefac[sfb] > 0)
-                            gi.scalefac[sfb] -= qupvt.pretab[sfb];
+                            gi.scalefac[sfb] -= QuantizePVT.pretab[sfb];
 
                     gi.preflag = recalc = 1;
                 }
@@ -1270,14 +1270,14 @@ namespace GroovyCodecs.Mp3.Mp3
                 if (0 == cod_info.preflag)
                 {
                     for (sfb = 11; sfb < Encoder.SBPSY_l; sfb++)
-                        if (scalefac[sfb] < qupvt.pretab[sfb])
+                        if (scalefac[sfb] < QuantizePVT.pretab[sfb])
                             break;
 
                     if (sfb == Encoder.SBPSY_l)
                     {
                         cod_info.preflag = 1;
                         for (sfb = 11; sfb < Encoder.SBPSY_l; sfb++)
-                            scalefac[sfb] -= qupvt.pretab[sfb];
+                            scalefac[sfb] -= QuantizePVT.pretab[sfb];
                     }
                 }
             }
@@ -1323,7 +1323,7 @@ namespace GroovyCodecs.Mp3.Mp3
             if (cod_info.block_type == Encoder.SHORT_TYPE)
             {
                 row_in_table = 1;
-                partition_table = qupvt.nr_of_sfb_block[table_number][row_in_table];
+                partition_table = QuantizePVT.nr_of_sfb_block[table_number][row_in_table];
                 for (sfb = 0, partition = 0; partition < 4; partition++)
                 {
                     nr_sfb = partition_table[partition] / 3;
@@ -1336,7 +1336,7 @@ namespace GroovyCodecs.Mp3.Mp3
             else
             {
                 row_in_table = 0;
-                partition_table = qupvt.nr_of_sfb_block[table_number][row_in_table];
+                partition_table = QuantizePVT.nr_of_sfb_block[table_number][row_in_table];
                 for (sfb = 0, partition = 0; partition < 4; partition++)
                 {
                     nr_sfb = partition_table[partition];
@@ -1353,7 +1353,7 @@ namespace GroovyCodecs.Mp3.Mp3
             if (!over)
             {
                 int slen1, slen2, slen3, slen4;
-                cod_info.sfb_partition_table = qupvt.nr_of_sfb_block[table_number][row_in_table];
+                cod_info.sfb_partition_table = QuantizePVT.nr_of_sfb_block[table_number][row_in_table];
                 for (partition = 0; partition < 4; partition++)
                     cod_info.slen[partition] = log2tab[max_sfac[partition]];
 

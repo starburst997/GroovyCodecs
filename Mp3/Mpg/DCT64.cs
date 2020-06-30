@@ -60,7 +60,7 @@ namespace GroovyCodecs.Mp3.Mpg
         {
 
             {
-                var costab = tabInit.pnts[0];
+                var costab = TabInit.pnts[0];
 
                 b1[0x00] = samples[samplesPos + 0x00] + samples[samplesPos + 0x1F];
                 b1[0x1F] = (samples[samplesPos + 0x00] - samples[samplesPos + 0x1F]) * costab[0x0];
@@ -112,7 +112,7 @@ namespace GroovyCodecs.Mp3.Mpg
             }
 
             {
-                var costab = tabInit.pnts[1];
+                var costab = TabInit.pnts[1];
 
                 b1[b2 + 0x00] = b1[0x00] + b1[0x0F];
                 b1[b2 + 0x0F] = (b1[0x00] - b1[0x0F]) * costab[0];
@@ -150,7 +150,7 @@ namespace GroovyCodecs.Mp3.Mpg
             }
 
             {
-                var costab = tabInit.pnts[2];
+                var costab = TabInit.pnts[2];
 
                 b1[0x00] = b1[b2 + 0x00] + b1[b2 + 0x07];
                 b1[0x07] = (b1[b2 + 0x00] - b1[b2 + 0x07]) * costab[0];
@@ -191,9 +191,9 @@ namespace GroovyCodecs.Mp3.Mpg
 
             {
 
-                var cos0 = tabInit.pnts[3][0];
+                var cos0 = TabInit.pnts[3][0];
 
-                var cos1 = tabInit.pnts[3][1];
+                var cos1 = TabInit.pnts[3][1];
 
                 b1[b2 + 0x00] = b1[0x00] + b1[0x03];
                 b1[b2 + 0x03] = (b1[0x00] - b1[0x03]) * cos0;
@@ -238,7 +238,7 @@ namespace GroovyCodecs.Mp3.Mpg
 
             {
 
-                var cos0 = tabInit.pnts[4][0];
+                var cos0 = TabInit.pnts[4][0];
 
                 b1[0x00] = b1[b2 + 0x00] + b1[b2 + 0x01];
                 b1[0x01] = (b1[b2 + 0x00] - b1[b2 + 0x01]) * cos0;

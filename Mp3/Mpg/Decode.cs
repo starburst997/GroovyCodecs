@@ -198,35 +198,35 @@ namespace GroovyCodecs.Mp3.Mpg
                 for (j = 16; j != 0; j--, b0Pos += 0x10, window += 0x20, samples += step)
                 {
                     float sum;
-                    sum = tab.decwin[window + 0x0] * b0[b0Pos + 0x0];
-                    sum -= tab.decwin[window + 0x1] * b0[b0Pos + 0x1];
-                    sum += tab.decwin[window + 0x2] * b0[b0Pos + 0x2];
-                    sum -= tab.decwin[window + 0x3] * b0[b0Pos + 0x3];
-                    sum += tab.decwin[window + 0x4] * b0[b0Pos + 0x4];
-                    sum -= tab.decwin[window + 0x5] * b0[b0Pos + 0x5];
-                    sum += tab.decwin[window + 0x6] * b0[b0Pos + 0x6];
-                    sum -= tab.decwin[window + 0x7] * b0[b0Pos + 0x7];
-                    sum += tab.decwin[window + 0x8] * b0[b0Pos + 0x8];
-                    sum -= tab.decwin[window + 0x9] * b0[b0Pos + 0x9];
-                    sum += tab.decwin[window + 0xA] * b0[b0Pos + 0xA];
-                    sum -= tab.decwin[window + 0xB] * b0[b0Pos + 0xB];
-                    sum += tab.decwin[window + 0xC] * b0[b0Pos + 0xC];
-                    sum -= tab.decwin[window + 0xD] * b0[b0Pos + 0xD];
-                    sum += tab.decwin[window + 0xE] * b0[b0Pos + 0xE];
-                    sum -= tab.decwin[window + 0xF] * b0[b0Pos + 0xF];
+                    sum = TabInit.decwin[window + 0x0] * b0[b0Pos + 0x0];
+                    sum -= TabInit.decwin[window + 0x1] * b0[b0Pos + 0x1];
+                    sum += TabInit.decwin[window + 0x2] * b0[b0Pos + 0x2];
+                    sum -= TabInit.decwin[window + 0x3] * b0[b0Pos + 0x3];
+                    sum += TabInit.decwin[window + 0x4] * b0[b0Pos + 0x4];
+                    sum -= TabInit.decwin[window + 0x5] * b0[b0Pos + 0x5];
+                    sum += TabInit.decwin[window + 0x6] * b0[b0Pos + 0x6];
+                    sum -= TabInit.decwin[window + 0x7] * b0[b0Pos + 0x7];
+                    sum += TabInit.decwin[window + 0x8] * b0[b0Pos + 0x8];
+                    sum -= TabInit.decwin[window + 0x9] * b0[b0Pos + 0x9];
+                    sum += TabInit.decwin[window + 0xA] * b0[b0Pos + 0xA];
+                    sum -= TabInit.decwin[window + 0xB] * b0[b0Pos + 0xB];
+                    sum += TabInit.decwin[window + 0xC] * b0[b0Pos + 0xC];
+                    sum -= TabInit.decwin[window + 0xD] * b0[b0Pos + 0xD];
+                    sum += TabInit.decwin[window + 0xE] * b0[b0Pos + 0xE];
+                    sum -= TabInit.decwin[window + 0xF] * b0[b0Pos + 0xF];
                     clip = WRITE_SAMPLE_CLIPPED(samples, sum, clip, @out, tFactory);
                 }
 
                 {
                     float sum;
-                    sum = tab.decwin[window + 0x0] * b0[b0Pos + 0x0];
-                    sum += tab.decwin[window + 0x2] * b0[b0Pos + 0x2];
-                    sum += tab.decwin[window + 0x4] * b0[b0Pos + 0x4];
-                    sum += tab.decwin[window + 0x6] * b0[b0Pos + 0x6];
-                    sum += tab.decwin[window + 0x8] * b0[b0Pos + 0x8];
-                    sum += tab.decwin[window + 0xA] * b0[b0Pos + 0xA];
-                    sum += tab.decwin[window + 0xC] * b0[b0Pos + 0xC];
-                    sum += tab.decwin[window + 0xE] * b0[b0Pos + 0xE];
+                    sum = TabInit.decwin[window + 0x0] * b0[b0Pos + 0x0];
+                    sum += TabInit.decwin[window + 0x2] * b0[b0Pos + 0x2];
+                    sum += TabInit.decwin[window + 0x4] * b0[b0Pos + 0x4];
+                    sum += TabInit.decwin[window + 0x6] * b0[b0Pos + 0x6];
+                    sum += TabInit.decwin[window + 0x8] * b0[b0Pos + 0x8];
+                    sum += TabInit.decwin[window + 0xA] * b0[b0Pos + 0xA];
+                    sum += TabInit.decwin[window + 0xC] * b0[b0Pos + 0xC];
+                    sum += TabInit.decwin[window + 0xE] * b0[b0Pos + 0xE];
                     clip = WRITE_SAMPLE_CLIPPED(samples, sum, clip, @out, tFactory);
                     b0Pos -= 0x10;
                     window -= 0x20;
@@ -237,22 +237,22 @@ namespace GroovyCodecs.Mp3.Mpg
                 for (j = 15; j != 0; j--, b0Pos -= 0x10, window -= 0x20, samples += step)
                 {
                     float sum;
-                    sum = -tab.decwin[window + -0x1] * b0[b0Pos + 0x0];
-                    sum -= tab.decwin[window + -0x2] * b0[b0Pos + 0x1];
-                    sum -= tab.decwin[window + -0x3] * b0[b0Pos + 0x2];
-                    sum -= tab.decwin[window + -0x4] * b0[b0Pos + 0x3];
-                    sum -= tab.decwin[window + -0x5] * b0[b0Pos + 0x4];
-                    sum -= tab.decwin[window + -0x6] * b0[b0Pos + 0x5];
-                    sum -= tab.decwin[window + -0x7] * b0[b0Pos + 0x6];
-                    sum -= tab.decwin[window + -0x8] * b0[b0Pos + 0x7];
-                    sum -= tab.decwin[window + -0x9] * b0[b0Pos + 0x8];
-                    sum -= tab.decwin[window + -0xA] * b0[b0Pos + 0x9];
-                    sum -= tab.decwin[window + -0xB] * b0[b0Pos + 0xA];
-                    sum -= tab.decwin[window + -0xC] * b0[b0Pos + 0xB];
-                    sum -= tab.decwin[window + -0xD] * b0[b0Pos + 0xC];
-                    sum -= tab.decwin[window + -0xE] * b0[b0Pos + 0xD];
-                    sum -= tab.decwin[window + -0xF] * b0[b0Pos + 0xE];
-                    sum -= tab.decwin[window + -0x0] * b0[b0Pos + 0xF];
+                    sum = -TabInit.decwin[window + -0x1] * b0[b0Pos + 0x0];
+                    sum -= TabInit.decwin[window + -0x2] * b0[b0Pos + 0x1];
+                    sum -= TabInit.decwin[window + -0x3] * b0[b0Pos + 0x2];
+                    sum -= TabInit.decwin[window + -0x4] * b0[b0Pos + 0x3];
+                    sum -= TabInit.decwin[window + -0x5] * b0[b0Pos + 0x4];
+                    sum -= TabInit.decwin[window + -0x6] * b0[b0Pos + 0x5];
+                    sum -= TabInit.decwin[window + -0x7] * b0[b0Pos + 0x6];
+                    sum -= TabInit.decwin[window + -0x8] * b0[b0Pos + 0x7];
+                    sum -= TabInit.decwin[window + -0x9] * b0[b0Pos + 0x8];
+                    sum -= TabInit.decwin[window + -0xA] * b0[b0Pos + 0x9];
+                    sum -= TabInit.decwin[window + -0xB] * b0[b0Pos + 0xA];
+                    sum -= TabInit.decwin[window + -0xC] * b0[b0Pos + 0xB];
+                    sum -= TabInit.decwin[window + -0xD] * b0[b0Pos + 0xC];
+                    sum -= TabInit.decwin[window + -0xE] * b0[b0Pos + 0xD];
+                    sum -= TabInit.decwin[window + -0xF] * b0[b0Pos + 0xE];
+                    sum -= TabInit.decwin[window + -0x0] * b0[b0Pos + 0xF];
 
                     clip = WRITE_SAMPLE_CLIPPED(samples, sum, clip, @out, tFactory);
                 }
@@ -317,35 +317,35 @@ namespace GroovyCodecs.Mp3.Mpg
                 for (j = 16; j != 0; j--, b0Pos += 0x10, window += 0x20, samples += step)
                 {
                     float sum;
-                    sum = tab.decwin[window + 0x0] * b0[b0Pos + 0x0];
-                    sum -= tab.decwin[window + 0x1] * b0[b0Pos + 0x1];
-                    sum += tab.decwin[window + 0x2] * b0[b0Pos + 0x2];
-                    sum -= tab.decwin[window + 0x3] * b0[b0Pos + 0x3];
-                    sum += tab.decwin[window + 0x4] * b0[b0Pos + 0x4];
-                    sum -= tab.decwin[window + 0x5] * b0[b0Pos + 0x5];
-                    sum += tab.decwin[window + 0x6] * b0[b0Pos + 0x6];
-                    sum -= tab.decwin[window + 0x7] * b0[b0Pos + 0x7];
-                    sum += tab.decwin[window + 0x8] * b0[b0Pos + 0x8];
-                    sum -= tab.decwin[window + 0x9] * b0[b0Pos + 0x9];
-                    sum += tab.decwin[window + 0xA] * b0[b0Pos + 0xA];
-                    sum -= tab.decwin[window + 0xB] * b0[b0Pos + 0xB];
-                    sum += tab.decwin[window + 0xC] * b0[b0Pos + 0xC];
-                    sum -= tab.decwin[window + 0xD] * b0[b0Pos + 0xD];
-                    sum += tab.decwin[window + 0xE] * b0[b0Pos + 0xE];
-                    sum -= tab.decwin[window + 0xF] * b0[b0Pos + 0xF];
+                    sum = TabInit.decwin[window + 0x0] * b0[b0Pos + 0x0];
+                    sum -= TabInit.decwin[window + 0x1] * b0[b0Pos + 0x1];
+                    sum += TabInit.decwin[window + 0x2] * b0[b0Pos + 0x2];
+                    sum -= TabInit.decwin[window + 0x3] * b0[b0Pos + 0x3];
+                    sum += TabInit.decwin[window + 0x4] * b0[b0Pos + 0x4];
+                    sum -= TabInit.decwin[window + 0x5] * b0[b0Pos + 0x5];
+                    sum += TabInit.decwin[window + 0x6] * b0[b0Pos + 0x6];
+                    sum -= TabInit.decwin[window + 0x7] * b0[b0Pos + 0x7];
+                    sum += TabInit.decwin[window + 0x8] * b0[b0Pos + 0x8];
+                    sum -= TabInit.decwin[window + 0x9] * b0[b0Pos + 0x9];
+                    sum += TabInit.decwin[window + 0xA] * b0[b0Pos + 0xA];
+                    sum -= TabInit.decwin[window + 0xB] * b0[b0Pos + 0xB];
+                    sum += TabInit.decwin[window + 0xC] * b0[b0Pos + 0xC];
+                    sum -= TabInit.decwin[window + 0xD] * b0[b0Pos + 0xD];
+                    sum += TabInit.decwin[window + 0xE] * b0[b0Pos + 0xE];
+                    sum -= TabInit.decwin[window + 0xF] * b0[b0Pos + 0xF];
                     WRITE_SAMPLE_UNCLIPPED(samples, sum, clip, @out, tFactory);
                 }
 
                 {
                     float sum;
-                    sum = tab.decwin[window + 0x0] * b0[b0Pos + 0x0];
-                    sum += tab.decwin[window + 0x2] * b0[b0Pos + 0x2];
-                    sum += tab.decwin[window + 0x4] * b0[b0Pos + 0x4];
-                    sum += tab.decwin[window + 0x6] * b0[b0Pos + 0x6];
-                    sum += tab.decwin[window + 0x8] * b0[b0Pos + 0x8];
-                    sum += tab.decwin[window + 0xA] * b0[b0Pos + 0xA];
-                    sum += tab.decwin[window + 0xC] * b0[b0Pos + 0xC];
-                    sum += tab.decwin[window + 0xE] * b0[b0Pos + 0xE];
+                    sum = TabInit.decwin[window + 0x0] * b0[b0Pos + 0x0];
+                    sum += TabInit.decwin[window + 0x2] * b0[b0Pos + 0x2];
+                    sum += TabInit.decwin[window + 0x4] * b0[b0Pos + 0x4];
+                    sum += TabInit.decwin[window + 0x6] * b0[b0Pos + 0x6];
+                    sum += TabInit.decwin[window + 0x8] * b0[b0Pos + 0x8];
+                    sum += TabInit.decwin[window + 0xA] * b0[b0Pos + 0xA];
+                    sum += TabInit.decwin[window + 0xC] * b0[b0Pos + 0xC];
+                    sum += TabInit.decwin[window + 0xE] * b0[b0Pos + 0xE];
                     WRITE_SAMPLE_UNCLIPPED(samples, sum, clip, @out, tFactory);
                     b0Pos -= 0x10;
                     window -= 0x20;
@@ -356,22 +356,22 @@ namespace GroovyCodecs.Mp3.Mpg
                 for (j = 15; j != 0; j--, b0Pos -= 0x10, window -= 0x20, samples += step)
                 {
                     float sum;
-                    sum = -tab.decwin[window + -0x1] * b0[b0Pos + 0x0];
-                    sum -= tab.decwin[window + -0x2] * b0[b0Pos + 0x1];
-                    sum -= tab.decwin[window + -0x3] * b0[b0Pos + 0x2];
-                    sum -= tab.decwin[window + -0x4] * b0[b0Pos + 0x3];
-                    sum -= tab.decwin[window + -0x5] * b0[b0Pos + 0x4];
-                    sum -= tab.decwin[window + -0x6] * b0[b0Pos + 0x5];
-                    sum -= tab.decwin[window + -0x7] * b0[b0Pos + 0x6];
-                    sum -= tab.decwin[window + -0x8] * b0[b0Pos + 0x7];
-                    sum -= tab.decwin[window + -0x9] * b0[b0Pos + 0x8];
-                    sum -= tab.decwin[window + -0xA] * b0[b0Pos + 0x9];
-                    sum -= tab.decwin[window + -0xB] * b0[b0Pos + 0xA];
-                    sum -= tab.decwin[window + -0xC] * b0[b0Pos + 0xB];
-                    sum -= tab.decwin[window + -0xD] * b0[b0Pos + 0xC];
-                    sum -= tab.decwin[window + -0xE] * b0[b0Pos + 0xD];
-                    sum -= tab.decwin[window + -0xF] * b0[b0Pos + 0xE];
-                    sum -= tab.decwin[window + -0x0] * b0[b0Pos + 0xF];
+                    sum = -TabInit.decwin[window + -0x1] * b0[b0Pos + 0x0];
+                    sum -= TabInit.decwin[window + -0x2] * b0[b0Pos + 0x1];
+                    sum -= TabInit.decwin[window + -0x3] * b0[b0Pos + 0x2];
+                    sum -= TabInit.decwin[window + -0x4] * b0[b0Pos + 0x3];
+                    sum -= TabInit.decwin[window + -0x5] * b0[b0Pos + 0x4];
+                    sum -= TabInit.decwin[window + -0x6] * b0[b0Pos + 0x5];
+                    sum -= TabInit.decwin[window + -0x7] * b0[b0Pos + 0x6];
+                    sum -= TabInit.decwin[window + -0x8] * b0[b0Pos + 0x7];
+                    sum -= TabInit.decwin[window + -0x9] * b0[b0Pos + 0x8];
+                    sum -= TabInit.decwin[window + -0xA] * b0[b0Pos + 0x9];
+                    sum -= TabInit.decwin[window + -0xB] * b0[b0Pos + 0xA];
+                    sum -= TabInit.decwin[window + -0xC] * b0[b0Pos + 0xB];
+                    sum -= TabInit.decwin[window + -0xD] * b0[b0Pos + 0xC];
+                    sum -= TabInit.decwin[window + -0xE] * b0[b0Pos + 0xD];
+                    sum -= TabInit.decwin[window + -0xF] * b0[b0Pos + 0xE];
+                    sum -= TabInit.decwin[window + -0x0] * b0[b0Pos + 0xF];
 
                     WRITE_SAMPLE_UNCLIPPED(samples, sum, clip, @out, tFactory);
                 }

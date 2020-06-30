@@ -126,7 +126,7 @@ namespace GroovyCodecs.Mp3.Mp3
                     var start = gfc.scalefac_band.psfb21[gsfb];
 
                     var end = gfc.scalefac_band.psfb21[gsfb + 1];
-                    var ath21 = qupvt.athAdjust(ath.adjust, ath.psfb21[gsfb], ath.floor);
+                    var ath21 = qupvt.athAdjust(ath.adjust, ATH.psfb21[gsfb], ath.floor);
                     if (gfc.nsPsy.longfact[21] > 1e-12f)
                         ath21 *= gfc.nsPsy.longfact[21];
 
@@ -155,7 +155,7 @@ namespace GroovyCodecs.Mp3.Mp3
                                     (gfc.scalefac_band.psfb12[gsfb] - gfc.scalefac_band.psfb12[0]);
 
                         var end = start + (gfc.scalefac_band.psfb12[gsfb + 1] - gfc.scalefac_band.psfb12[gsfb]);
-                        var ath12 = qupvt.athAdjust(ath.adjust, ath.psfb12[gsfb], ath.floor);
+                        var ath12 = qupvt.athAdjust(ath.adjust, ATH.psfb12[gsfb], ath.floor);
                         if (gfc.nsPsy.shortfact[12] > 1e-12f)
                             ath12 *= gfc.nsPsy.shortfact[12];
 
@@ -248,7 +248,7 @@ namespace GroovyCodecs.Mp3.Mp3
             }
 
             cod_info.count1bits = 0;
-            cod_info.sfb_partition_table = qupvt.nr_of_sfb_block[0][0];
+            cod_info.sfb_partition_table = QuantizePVT.nr_of_sfb_block[0][0];
             cod_info.slen[0] = 0;
             cod_info.slen[1] = 0;
             cod_info.slen[2] = 0;
@@ -591,7 +591,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 var width = cod_info.width[sfb];
                 var s = cod_info.scalefac[sfb];
                 if (cod_info.preflag != 0)
-                    s += qupvt.pretab[sfb];
+                    s += QuantizePVT.pretab[sfb];
 
                 j += width;
                 if ((s & 1) != 0)

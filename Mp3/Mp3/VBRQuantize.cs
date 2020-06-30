@@ -204,7 +204,7 @@ namespace GroovyCodecs.Mp3.Mp3
             for (var i = 0; i < 8; ++i)
             {
 
-                var xfsf = qupvt.ipow20[sf] * xr34;
+                var xfsf = QuantizePVT.ipow20[sf] * xr34;
                 if (xfsf <= QuantizePVT.IXMAX_VAL)
                 {
                     sfOk = sf;
@@ -243,10 +243,10 @@ namespace GroovyCodecs.Mp3.Mp3
             l3[l3Pos + 1] = (int)x[1];
             l3[l3Pos + 2] = (int)x[2];
             l3[l3Pos + 3] = (int)x[3];
-            x[0] += qupvt.adj43[l3[l3Pos + 0]];
-            x[1] += qupvt.adj43[l3[l3Pos + 1]];
-            x[2] += qupvt.adj43[l3[l3Pos + 2]];
-            x[3] += qupvt.adj43[l3[l3Pos + 3]];
+            x[0] += QuantizePVT.adj43[l3[l3Pos + 0]];
+            x[1] += QuantizePVT.adj43[l3[l3Pos + 1]];
+            x[2] += QuantizePVT.adj43[l3[l3Pos + 2]];
+            x[3] += QuantizePVT.adj43[l3[l3Pos + 3]];
             l3[l3Pos + 0] = (int)x[0];
             l3[l3Pos + 1] = (int)x[1];
             l3[l3Pos + 2] = (int)x[2];
@@ -258,8 +258,8 @@ namespace GroovyCodecs.Mp3.Mp3
             Debug.Assert(x[0] <= QuantizePVT.IXMAX_VAL && x[1] <= QuantizePVT.IXMAX_VAL);
             l3[l3Pos + 0] = (int)x[0];
             l3[l3Pos + 1] = (int)x[1];
-            x[0] += qupvt.adj43[l3[l3Pos + 0]];
-            x[1] += qupvt.adj43[l3[l3Pos + 1]];
+            x[0] += QuantizePVT.adj43[l3[l3Pos + 0]];
+            x[1] += QuantizePVT.adj43[l3[l3Pos + 1]];
             l3[l3Pos + 0] = (int)x[0];
             l3[l3Pos + 1] = (int)x[1];
         }
@@ -269,9 +269,9 @@ namespace GroovyCodecs.Mp3.Mp3
             var x = new double[4];
             var l3 = new int[4];
 
-            var sfpow = qupvt.pow20[sf + QuantizePVT.Q_MAX2];
+            var sfpow = QuantizePVT.pow20[sf + QuantizePVT.Q_MAX2];
 
-            var sfpow34 = qupvt.ipow20[sf];
+            var sfpow34 = QuantizePVT.ipow20[sf];
             float xfsf = 0;
             var j = bw >> 1;
 
@@ -283,10 +283,10 @@ namespace GroovyCodecs.Mp3.Mp3
                 x[2] = sfpow34 * xr34[xrPos + 2];
                 x[3] = sfpow34 * xr34[xrPos + 3];
                 k_34_4(x, l3, 0);
-                x[0] = Math.Abs(xr[xrPos + 0]) - sfpow * qupvt.pow43[l3[0]];
-                x[1] = Math.Abs(xr[xrPos + 1]) - sfpow * qupvt.pow43[l3[1]];
-                x[2] = Math.Abs(xr[xrPos + 2]) - sfpow * qupvt.pow43[l3[2]];
-                x[3] = Math.Abs(xr[xrPos + 3]) - sfpow * qupvt.pow43[l3[3]];
+                x[0] = Math.Abs(xr[xrPos + 0]) - sfpow * QuantizePVT.pow43[l3[0]];
+                x[1] = Math.Abs(xr[xrPos + 1]) - sfpow * QuantizePVT.pow43[l3[1]];
+                x[2] = Math.Abs(xr[xrPos + 2]) - sfpow * QuantizePVT.pow43[l3[2]];
+                x[3] = Math.Abs(xr[xrPos + 3]) - sfpow * QuantizePVT.pow43[l3[3]];
                 xfsf += (float)(x[0] * x[0] + x[1] * x[1] + (x[2] * x[2] + x[3] * x[3]));
                 xrPos += 4;
             }
@@ -296,8 +296,8 @@ namespace GroovyCodecs.Mp3.Mp3
                 x[0] = sfpow34 * xr34[xrPos + 0];
                 x[1] = sfpow34 * xr34[xrPos + 1];
                 k_34_2(x, l3, 0);
-                x[0] = Math.Abs(xr[xrPos + 0]) - sfpow * qupvt.pow43[l3[0]];
-                x[1] = Math.Abs(xr[xrPos + 1]) - sfpow * qupvt.pow43[l3[1]];
+                x[0] = Math.Abs(xr[xrPos + 0]) - sfpow * QuantizePVT.pow43[l3[0]];
+                x[1] = Math.Abs(xr[xrPos + 1]) - sfpow * QuantizePVT.pow43[l3[1]];
                 xfsf += (float)(x[0] * x[0] + x[1] * x[1]);
             }
 
@@ -511,12 +511,12 @@ namespace GroovyCodecs.Mp3.Mp3
             while (j <= max_nonzero_coeff)
             {
 
-                var s = (cod_info.scalefac[sfb] + (cod_info.preflag != 0 ? qupvt.pretab[sfb] : 0)) * ifqstep +
+                var s = (cod_info.scalefac[sfb] + (cod_info.preflag != 0 ? QuantizePVT.pretab[sfb] : 0)) * ifqstep +
                         cod_info.subblock_gain[cod_info.window[sfb]] * 8;
 
                 var sfac = cod_info.global_gain - s;
 
-                var sfpow34 = qupvt.ipow20[sfac];
+                var sfpow34 = QuantizePVT.ipow20[sfac];
 
                 var w = cod_info.width[sfb];
 
@@ -669,13 +669,13 @@ namespace GroovyCodecs.Mp3.Mp3
             var preflag = cod_info.preflag;
             if (preflag != 0)
                 for (var sfb = 11; sfb < sfbmax; ++sfb)
-                    sf[sfb] += qupvt.pretab[sfb] * ifqstep;
+                    sf[sfb] += QuantizePVT.pretab[sfb] * ifqstep;
 
             for (var sfb = 0; sfb < sfbmax; ++sfb)
             {
 
                 var gain = cod_info.global_gain - sbg[window[sfb]] * 8 -
-                           (preflag != 0 ? qupvt.pretab[sfb] : 0) * ifqstep;
+                           (preflag != 0 ? QuantizePVT.pretab[sfb] : 0) * ifqstep;
                 if (sf[sfb] < 0)
                 {
 
@@ -705,7 +705,7 @@ namespace GroovyCodecs.Mp3.Mp3
             for (var sfb = 0; sfb < cod_info.psymax; ++sfb)
             {
 
-                var s = (cod_info.scalefac[sfb] + (cod_info.preflag != 0 ? qupvt.pretab[sfb] : 0)) * ifqstep +
+                var s = (cod_info.scalefac[sfb] + (cod_info.preflag != 0 ? QuantizePVT.pretab[sfb] : 0)) * ifqstep +
                         cod_info.subblock_gain[cod_info.window[sfb]] * 8;
                 if (cod_info.global_gain - s < vbrsfmin[sfb])
                     return false;

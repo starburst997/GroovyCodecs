@@ -57,22 +57,22 @@ namespace GroovyCodecs.Mp3.Mp3
         /// <summary>
         ///     ATH for sfbs in long blocks.
         /// </summary>
-        internal float[] l = new float[Encoder.SBMAX_l];
+        static internal float[] l = new float[Encoder.SBMAX_l];
 
         /// <summary>
         ///     ATH for partitioned sfb12 in short blocks.
         /// </summary>
-        internal float[] psfb12 = new float[Encoder.PSFB12];
+        static internal float[] psfb12 = new float[Encoder.PSFB12];
 
         /// <summary>
         ///     ATH for partitioned sfb21 in long blocks.
         /// </summary>
-        internal float[] psfb21 = new float[Encoder.PSFB21];
+        static internal float[] psfb21 = new float[Encoder.PSFB21];
 
         /// <summary>
         ///     ATH for sfbs in short blocks.
         /// </summary>
-        internal float[] s = new float[Encoder.SBMAX_s];
+        static internal float[] s = new float[Encoder.SBMAX_s];
 
         /// <summary>
         ///     Method for the auto adjustment.

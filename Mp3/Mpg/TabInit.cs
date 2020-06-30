@@ -306,9 +306,10 @@ namespace GroovyCodecs.Mp3.Mpg
             1.144989014
         };
 
-        internal float[] decwin = new float[512 + 32];
+        internal static bool decwin_set = false;
+        internal static float[] decwin = new float[512 + 32];
 
-        internal float[][] pnts =
+        internal static float[][] pnts =
         {
             cos64,
             cos32,
@@ -320,6 +321,9 @@ namespace GroovyCodecs.Mp3.Mpg
 
         internal virtual void make_decode_tables(long scaleval)
         {
+            if (decwin_set) return;
+            decwin_set = true;
+            
             int i, j, k, kr, divv;
             int table;
             float[] costab;

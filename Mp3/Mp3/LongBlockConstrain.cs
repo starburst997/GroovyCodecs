@@ -57,8 +57,8 @@ namespace GroovyCodecs.Mp3.Mp3
 
                 v0 = v - 2 * VBRQuantize.max_range_long[sfb];
                 v1 = v - 4 * VBRQuantize.max_range_long[sfb];
-                v0p = v - 2 * (max_rangep[sfb] + vbrQuantize.qupvt.pretab[sfb]);
-                v1p = v - 4 * (max_rangep[sfb] + vbrQuantize.qupvt.pretab[sfb]);
+                v0p = v - 2 * (max_rangep[sfb] + QuantizePVT.pretab[sfb]);
+                v1p = v - 4 * (max_rangep[sfb] + QuantizePVT.pretab[sfb]);
                 if (maxover0 < v0)
                     maxover0 = v0;
 
@@ -81,7 +81,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 for (sfb = 0; sfb < psymax; ++sfb)
                 {
 
-                    var a = gain - vbrsfmin[sfb] - 2 * vbrQuantize.qupvt.pretab[sfb];
+                    var a = gain - vbrsfmin[sfb] - 2 * QuantizePVT.pretab[sfb];
                     if (a <= 0)
                     {
                         vm0p = 0;
@@ -100,7 +100,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 for (sfb = 0; sfb < psymax; ++sfb)
                 {
 
-                    var b = gain - vbrsfmin[sfb] - 4 * vbrQuantize.qupvt.pretab[sfb];
+                    var b = gain - vbrsfmin[sfb] - 4 * QuantizePVT.pretab[sfb];
                     if (b <= 0)
                     {
                         vm1p = 0;
