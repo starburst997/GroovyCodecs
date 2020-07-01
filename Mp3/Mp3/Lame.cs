@@ -72,9 +72,9 @@ namespace GroovyCodecs.Mp3.Mp3
 
         internal const long LAME_ID = 0xFFF88E3B;
 
-        internal const int LAME_MAXALBUMART = 128 * 1024;
+        internal const int LAME_MAXALBUMART = 0; //128 * 1024;
 
-        internal static readonly int LAME_MAXMP3BUFFER = 16384 + LAME_MAXALBUMART;
+        internal static readonly int LAME_MAXMP3BUFFER = 4096 + LAME_MAXALBUMART;
 
         internal const int MEDIUM = 1006;
 
@@ -778,6 +778,8 @@ namespace GroovyCodecs.Mp3.Mp3
             }
         }
 
+        private static bool _set = false; 
+        
         internal int lame_init_params(LameGlobalFlags gfp)
         {
             var gfc = gfp.internal_flags;
@@ -957,12 +959,15 @@ namespace GroovyCodecs.Mp3.Mp3
             if (gfc.decode_on_the_fly)
                 gfc.findPeakSample = true;
 
-            if (gfc.findReplayGain)
-                if (ga.InitGainAnalysis(gfc.rgdata, gfp.out_samplerate) == GainAnalysis.INIT_GAIN_ANALYSIS_ERROR)
-                {
-                    gfp.internal_flags = null;
-                    return -6;
-                }
+            if (!_set)
+            {
+                if (gfc.findReplayGain)
+                    if (ga.InitGainAnalysis(gfc.rgdata, gfp.out_samplerate) == GainAnalysis.INIT_GAIN_ANALYSIS_ERROR)
+                    {
+                        gfp.internal_flags = null;
+                        return -6;
+                    }
+            }
 
             if (gfc.decode_on_the_fly && !gfp.decode_only)
             {
@@ -1303,6 +1308,9 @@ namespace GroovyCodecs.Mp3.Mp3
 
             qupvt.iteration_init(gfp);
             psy.psymodel_init(gfp);
+
+            _set = true;
+            
             return 0;
         }
 

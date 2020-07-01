@@ -9,9 +9,9 @@ namespace GroovyCodecs.Mp3.Mp3
     internal sealed class ReplayGain
     {
 
-        internal int[] A = new int[(int)(GainAnalysis.STEPS_per_dB * GainAnalysis.MAX_dB)];
+        static internal int[] A = new int[(int)(GainAnalysis.STEPS_per_dB * GainAnalysis.MAX_dB)];
 
-        internal int[] B = new int[(int)(GainAnalysis.STEPS_per_dB * GainAnalysis.MAX_dB)];
+        static internal int[] B = new int[(int)(GainAnalysis.STEPS_per_dB * GainAnalysis.MAX_dB)];
 
         internal int first;
 

@@ -552,7 +552,7 @@ namespace GroovyCodecs.Mp3.Mp3
             rgData.rsum = 0.0;
             rgData.totsamp = 0;
 
-            Arrays.Fill(rgData.A, 0);
+            Arrays.Fill(ReplayGain.A, 0);
 
             return INIT_GAIN_ANALYSIS_OK;
         }
@@ -569,7 +569,7 @@ namespace GroovyCodecs.Mp3.Mp3
             rgData.lout = MAX_ORDER;
             rgData.rout = MAX_ORDER;
 
-            Arrays.Fill(rgData.B, 0);
+            Arrays.Fill(ReplayGain.B, 0);
 
             return INIT_GAIN_ANALYSIS_OK;
         }
@@ -718,10 +718,10 @@ namespace GroovyCodecs.Mp3.Mp3
                     var val = STEPS_per_dB * 10.0 *
                               Math.Log10((rgData.lsum + rgData.rsum) / rgData.totsamp * 0.5 + 1e-37);
                     var ival = val <= 0 ? 0 : (int)val;
-                    if (ival >= rgData.A.Length)
-                        ival = rgData.A.Length - 1;
+                    if (ival >= ReplayGain.A.Length)
+                        ival = ReplayGain.A.Length - 1;
 
-                    rgData.A[ival]++;
+                    ReplayGain.A[ival]++;
                     rgData.lsum = rgData.rsum = 0.0;
 
                     Array.Copy(rgData.loutbuf, rgData.totsamp, rgData.loutbuf, 0, MAX_ORDER);
@@ -772,12 +772,12 @@ namespace GroovyCodecs.Mp3.Mp3
 
         internal float GetTitleGain(ReplayGain rgData)
         {
-            var retval = analyzeResult(rgData.A, rgData.A.Length);
+            var retval = analyzeResult(ReplayGain.A, ReplayGain.A.Length);
 
-            for (var i = 0; i < rgData.A.Length; i++)
+            for (var i = 0; i < ReplayGain.A.Length; i++)
             {
-                rgData.B[i] += rgData.A[i];
-                rgData.A[i] = 0;
+                ReplayGain.B[i] += ReplayGain.A[i];
+                ReplayGain.A[i] = 0;
             }
 
             for (var i = 0; i < MAX_ORDER; i++)
