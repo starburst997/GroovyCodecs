@@ -101,14 +101,13 @@ namespace GroovyCodecs.Mp3
             mpg.setModules(intf, common);
             intf.setModules(vbr, common);
 
-            var watch = new Stopwatch();
-            watch.Start();
+            //var watch = new Stopwatch();
+            //watch.Start();
             
             gfp = lame.lame_init();
 
-            watch.Stop();
-            Console.WriteLine($"lame_init: {watch.ElapsedTicks} ticks");
-            
+            //watch.Stop();
+            //Console.WriteLine($"lame_init: {watch.ElapsedTicks} ticks");
             
             /*
              * turn off automatic writing of ID3 tag data into mp3 stream we have to
@@ -121,22 +120,22 @@ namespace GroovyCodecs.Mp3
              * Now that all the options are set, lame needs to analyze them and set
              * some more internal options and check for problems
              */
-            watch.Start();
+            //watch.Start();
             lame.lame_init_params(gfp);
             
-            watch.Stop();
-            Console.WriteLine($"lame_init_params: {watch.ElapsedTicks} ticks");
+            //watch.Stop();
+            //Console.WriteLine($"lame_init_params: {watch.ElapsedTicks} ticks");
             
             parse.input_format = GetAudio.sound_file_format.sf_mp3;
 
             var enc = new Enc();
 
-            watch.Start();
+            //watch.Start();
             
             gaud.init_infile(gfp, mp3Stream, enc);
             
-            watch.Stop();
-            Console.WriteLine($"init_infile: {watch.ElapsedTicks} ticks");
+            //watch.Stop();
+            //Console.WriteLine($"init_infile: {watch.ElapsedTicks} ticks");
 
             SkipStart = 0;
             SkipEnd = 0;
