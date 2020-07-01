@@ -106,10 +106,10 @@ namespace GroovyCodecs.Mp3.Mp3
 
         private void putheader_bits(LameInternalFlags gfc)
         {
-            Array.Copy(gfc.header[gfc.w_ptr].buf, 0, buf, bufByteIdx, gfc.sideinfo_len);
+            Array.Copy(gfc.GetHeader(gfc.w_ptr).buf, 0, buf, bufByteIdx, gfc.sideinfo_len);
             bufByteIdx += gfc.sideinfo_len;
             totbit += gfc.sideinfo_len * 8;
-            gfc.w_ptr = (gfc.w_ptr + 1) & (LameInternalFlags.MAX_HEADER_BUF - 1);
+            gfc.w_ptr = (gfc.w_ptr + 1) & (gfc._header.Count - 1);
         }
 
         /// <summary>
@@ -127,8 +127,8 @@ namespace GroovyCodecs.Mp3.Mp3
                     bufBitIdx = 8;
                     bufByteIdx++;
                     Debug.Assert(bufByteIdx < Lame.LAME_MAXMP3BUFFER);
-                    Debug.Assert(gfc.header[gfc.w_ptr].write_timing >= totbit);
-                    if (gfc.header[gfc.w_ptr].write_timing == totbit)
+                    Debug.Assert(gfc.GetHeader(gfc.w_ptr).write_timing >= totbit);
+                    if (gfc.GetHeader(gfc.w_ptr).write_timing == totbit)
                         putheader_bits(gfc);
 
                     buf[bufByteIdx] = 0;
@@ -243,7 +243,7 @@ namespace GroovyCodecs.Mp3.Mp3
         /// </summary>
         private void writeheader(LameInternalFlags gfc, int val, int j)
         {
-            var ptr = gfc.header[gfc.h_ptr].ptr;
+            var ptr = gfc.GetHeader(gfc.h_ptr).ptr;
 
             while (j > 0)
             {
@@ -252,12 +252,12 @@ namespace GroovyCodecs.Mp3.Mp3
                 j -= k;
                 Debug.Assert(j < MAX_LENGTH); // >> 32 too large for 32 bit machines
 
-                gfc.header[gfc.h_ptr].buf[ptr >> 3] =
-                    (byte)(gfc.header[gfc.h_ptr].buf[ptr >> 3] | (byte)((val >> j) << (8 - (ptr & 7) - k)));
+                gfc.GetHeader(gfc.h_ptr).buf[ptr >> 3] =
+                    (byte)(gfc.GetHeader(gfc.h_ptr).buf[ptr >> 3] | (byte)((val >> j) << (8 - (ptr & 7) - k)));
                 ptr += k;
             }
 
-            gfc.header[gfc.h_ptr].ptr = ptr;
+            gfc.GetHeader(gfc.h_ptr).ptr = ptr;
         }
 
         private int CRC_update(int value, int crc)
@@ -297,8 +297,8 @@ namespace GroovyCodecs.Mp3.Mp3
             int gr, ch;
 
             l3_side = gfc.l3_side;
-            gfc.header[gfc.h_ptr].ptr = 0;
-            Arrays.Fill(gfc.header[gfc.h_ptr].buf, 0, gfc.sideinfo_len, (byte)0);
+            gfc.GetHeader(gfc.h_ptr).ptr = 0;
+            Arrays.Fill(gfc.GetHeader(gfc.h_ptr).buf, 0, gfc.sideinfo_len, (byte)0);
             if (gfp.out_samplerate < 16000)
                 writeheader(gfc, 0xffe, 12);
             else
@@ -457,15 +457,15 @@ namespace GroovyCodecs.Mp3.Mp3
             }
 
             if (gfp.error_protection)
-                CRC_writeheader(gfc, gfc.header[gfc.h_ptr].buf);
+                CRC_writeheader(gfc, gfc.GetHeader(gfc.h_ptr).buf);
 
             {
 
                 var old = gfc.h_ptr;
-                Debug.Assert(gfc.header[old].ptr == gfc.sideinfo_len * 8);
+                Debug.Assert(gfc.GetHeader(old).ptr == gfc.sideinfo_len * 8);
 
-                gfc.h_ptr = (old + 1) & (LameInternalFlags.MAX_HEADER_BUF - 1);
-                gfc.header[gfc.h_ptr].write_timing = gfc.header[old].write_timing + bitsPerFrame;
+                gfc.h_ptr = (old + 1) & (gfc._header.Count - 1);
+                gfc.GetHeader(gfc.h_ptr).write_timing = gfc.GetHeader(old).write_timing + bitsPerFrame;
             }
         }
 
@@ -807,10 +807,10 @@ namespace GroovyCodecs.Mp3.Mp3
             last_ptr = gfc.h_ptr - 1;
             /* last header to add to bitstream */
             if (last_ptr == -1)
-                last_ptr = LameInternalFlags.MAX_HEADER_BUF - 1;
+                last_ptr = gfc._header.Count - 1;
 
             /* add this many bits to bitstream so we can flush all headers */
-            flushbits = gfc.header[last_ptr].write_timing - totbit;
+            flushbits = gfc.GetHeader(last_ptr).write_timing - totbit;
             total_bytes_output.total = flushbits;
 
             if (flushbits >= 0)
@@ -819,7 +819,7 @@ namespace GroovyCodecs.Mp3.Mp3
                 /* reduce flushbits by the size of the headers */
                 remaining_headers = 1 + last_ptr - first_ptr;
                 if (last_ptr < first_ptr)
-                    remaining_headers = 1 + last_ptr - first_ptr + LameInternalFlags.MAX_HEADER_BUF;
+                    remaining_headers = 1 + last_ptr - first_ptr + gfc._header.Count;
 
                 flushbits -= remaining_headers * 8 * gfc.sideinfo_len;
             }
@@ -852,7 +852,7 @@ namespace GroovyCodecs.Mp3.Mp3
             var last_ptr = gfc.h_ptr - 1;
             /* last header to add to bitstream */
             if (last_ptr == -1)
-                last_ptr = LameInternalFlags.MAX_HEADER_BUF - 1;
+                last_ptr = gfc._header.Count - 1;
 
             l3_side = gfc.l3_side;
 
@@ -862,7 +862,7 @@ namespace GroovyCodecs.Mp3.Mp3
             drain_into_ancillary(gfp, flushbits);
 
             /* check that the 100% of the last frame has been written to bitstream */
-            Debug.Assert(gfc.header[last_ptr].write_timing + getframebits(gfp) == totbit);
+            Debug.Assert(gfc.GetHeader(last_ptr).write_timing + getframebits(gfp) == totbit);
 
             /*
              * we have padded out all frames with ancillary data, which is the same
@@ -908,8 +908,8 @@ namespace GroovyCodecs.Mp3.Mp3
             {
                 putbits_noheaders(gfc, val, 8);
 
-                for (i = 0; i < LameInternalFlags.MAX_HEADER_BUF; ++i)
-                    gfc.header[i].write_timing += 8;
+                for (i = 0; i < gfc._header.Count; ++i)
+                    gfc.GetHeader(i).write_timing += 8;
             }
         }
 
@@ -957,8 +957,8 @@ namespace GroovyCodecs.Mp3.Mp3
                  * bit counter
                  */
                 int i;
-                for (i = 0; i < LameInternalFlags.MAX_HEADER_BUF; ++i)
-                    gfc.header[i].write_timing -= totbit;
+                for (i = 0; i < gfc._header.Count; ++i)
+                    gfc.GetHeader(i).write_timing -= totbit;
 
                 totbit = 0;
             }
@@ -1089,7 +1089,7 @@ namespace GroovyCodecs.Mp3.Mp3
             buf = new byte[Lame.LAME_MAXMP3BUFFER];
 
             gfc.h_ptr = gfc.w_ptr = 0;
-            gfc.header[gfc.h_ptr].write_timing = 0;
+            gfc.GetHeader(gfc.h_ptr).write_timing = 0;
             bufByteIdx = -1;
             bufBitIdx = 0;
             totbit = 0;

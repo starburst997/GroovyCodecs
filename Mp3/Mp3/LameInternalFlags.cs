@@ -4,6 +4,7 @@
 // Order the Premium Edition at https://www.tangiblesoftwaresolutions.com
 //========================================================================
 
+using System.Collections.Generic;
 using GroovyCodecs.Mp3.Common;
 using GroovyCodecs.Mp3.Mpg;
 
@@ -146,8 +147,20 @@ namespace GroovyCodecs.Mp3.Mp3
 
         internal int h_ptr;
 
-        internal Header[] header = new Header[MAX_HEADER_BUF];
+        internal List<Header> _header = new List<Header>();
 
+        public Header GetHeader(int i)
+        {
+            if (i < _header.Count) return _header[i];
+            
+            while (i >= _header.Count)
+            {
+                _header.Add(new Header());
+            }
+
+            return _header[i];
+        }
+        
         /// <summary>
         ///     normalized frequency bounds of passband
         /// </summary>
@@ -429,8 +442,8 @@ namespace GroovyCodecs.Mp3.Mp3
             for (var i = 0; i < thm.Length; i++)
                 thm[i] = new III_psy_xmin();
 
-            for (var i = 0; i < header.Length; i++)
-                header[i] = new Header();
+            /*for (var i = 0; i < header.Length; i++)
+                header[i] = new Header();*/
         }
     }
 
