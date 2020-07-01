@@ -329,19 +329,19 @@ namespace GroovyCodecs.Mp3.Mpg
                         tables[i][itable++] = @base[i][j];
                     }
                 }
-            }
-
-            float[] table;
+                
+                float[] table;
             
-            for (int k = 0; k < 27; k++)
-            {
-                var m = mulmul[k];
-                table = common.muls[k];
-                var tablePos = 0;
-                for (int j = 3, i = 0; i < 63; i++, j--)
-                    table[tablePos++] = (float)(m * Math.Pow(2.0, j / 3.0));
+                for (k = 0; k < 27; k++)
+                {
+                    var m = mulmul[k];
+                    table = Common.muls[k];
+                    var tablePos = 0;
+                    for (j = 3, i = 0; i < 63; i++, j--)
+                        table[tablePos++] = (float)(m * Math.Pow(2.0, j / 3.0));
 
-                table[tablePos++] = 0.0f;
+                    table[tablePos++] = 0.0f;
+                }
             }
         }
 
@@ -451,7 +451,7 @@ namespace GroovyCodecs.Mp3.Mpg
                         k = fr.alloc[alloc2 = alloc1 + ba].bits;
                         if ((d1 = fr.alloc[alloc2].d) < 0)
                         {
-                            var cm = common.muls[k][scale[scalePos + x1]];
+                            var cm = Common.muls[k][scale[scalePos + x1]];
                             fraction[j][0][i] = (common.getbits(mp, k) + d1) * cm;
                             fraction[j][1][i] = (common.getbits(mp, k) + d1) * cm;
                             fraction[j][2][i] = (common.getbits(mp, k) + d1) * cm;
@@ -461,9 +461,9 @@ namespace GroovyCodecs.Mp3.Mpg
                             int idx, tab, m = scale[scalePos + x1];
                             idx = common.getbits(mp, k);
                             tab = idx + idx + idx;
-                            fraction[j][0][i] = common.muls[table[d1][tab++]][m];
-                            fraction[j][1][i] = common.muls[table[d1][tab++]][m];
-                            fraction[j][2][i] = common.muls[table[d1][tab]][m];
+                            fraction[j][0][i] = Common.muls[table[d1][tab++]][m];
+                            fraction[j][1][i] = Common.muls[table[d1][tab++]][m];
+                            fraction[j][2][i] = Common.muls[table[d1][tab]][m];
                         }
 
                         scalePos += 3;
@@ -486,11 +486,11 @@ namespace GroovyCodecs.Mp3.Mpg
                     if ((d1 = fr.alloc[alloc2].d) < 0)
                     {
                         float cm;
-                        cm = common.muls[k][scale[scalePos + x1 + 3]];
+                        cm = Common.muls[k][scale[scalePos + x1 + 3]];
                         fraction[1][0][i] = (fraction[0][0][i] = common.getbits(mp, k) + d1) * cm;
                         fraction[1][1][i] = (fraction[0][1][i] = common.getbits(mp, k) + d1) * cm;
                         fraction[1][2][i] = (fraction[0][2][i] = common.getbits(mp, k) + d1) * cm;
-                        cm = common.muls[k][scale[scalePos + x1]];
+                        cm = Common.muls[k][scale[scalePos + x1]];
                         fraction[0][0][i] *= cm;
                         fraction[0][1][i] *= cm;
                         fraction[0][2][i] *= cm;
@@ -502,12 +502,12 @@ namespace GroovyCodecs.Mp3.Mpg
                         m2 = scale[scalePos + x1 + 3];
                         idx = common.getbits(mp, k);
                         tab = idx + idx + idx;
-                        fraction[0][0][i] = common.muls[table[d1][tab]][m1];
-                        fraction[1][0][i] = common.muls[table[d1][tab++]][m2];
-                        fraction[0][1][i] = common.muls[table[d1][tab]][m1];
-                        fraction[1][1][i] = common.muls[table[d1][tab++]][m2];
-                        fraction[0][2][i] = common.muls[table[d1][tab]][m1];
-                        fraction[1][2][i] = common.muls[table[d1][tab]][m2];
+                        fraction[0][0][i] = Common.muls[table[d1][tab]][m1];
+                        fraction[1][0][i] = Common.muls[table[d1][tab++]][m2];
+                        fraction[0][1][i] = Common.muls[table[d1][tab]][m1];
+                        fraction[1][1][i] = Common.muls[table[d1][tab++]][m2];
+                        fraction[0][2][i] = Common.muls[table[d1][tab]][m1];
+                        fraction[1][2][i] = Common.muls[table[d1][tab]][m2];
                     }
 
                     scalePos += 6;

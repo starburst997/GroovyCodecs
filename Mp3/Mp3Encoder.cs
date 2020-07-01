@@ -496,7 +496,7 @@ namespace GroovyCodecs.Mp3
 
             gfp.quality = quality;
 
-            id3.id3tag_init(gfp);
+            //id3.id3tag_init(gfp);
             /*
              * turn off automatic writing of ID3 tag data into mp3 stream we have to
              * call it before 'lame_init_params', because that function would spit

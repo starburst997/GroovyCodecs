@@ -77,7 +77,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
         internal int[][] bitrate_stereoMode_Hist = Arrays.ReturnRectangularArray<int>(16, 4 + 1);
 
-        internal float[][] blackfilt = new float[2 * BPC + 1][];
+        internal float[][] blackfilt = null;
 
         /// <summary>
         ///     block type
@@ -92,7 +92,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
         internal int[] bo_s = new int[Encoder.SBMAX_s];
 
-        internal int[] bv_scf = new int[576];
+        internal int[] bv_scf = null;
 
         /// <summary>
         ///     number of channels in the input data stream (PCM or decoded PCM)
@@ -209,7 +209,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
         internal int mf_size;
 
-        internal float[][] mfbuf = Arrays.ReturnRectangularArray<float>(2, MFSIZE);
+        internal float[][] mfbuf = null;
 
         /* daa from PsyModel */
         /* The static variables "r", "phi_sav", "new", "old" and "oldest" have */
@@ -369,7 +369,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
         /* variables for newmdct.c */
 
-        internal float[][][][] sb_sample = Arrays.ReturnRectangularArray<float>(2, 2, 18, Encoder.SBLIMIT);
+        internal float[][][][] sb_sample = null;
 
         internal ScaleFac scalefac_band = new ScaleFac();
 

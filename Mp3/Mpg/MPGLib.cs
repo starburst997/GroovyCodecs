@@ -106,8 +106,7 @@ namespace GroovyCodecs.Mp3.Mpg
 
             internal int[] hybrid_blc = new int[2];
 
-            internal float[][][] hybrid_block =
-                Arrays.ReturnRectangularArray<float>(2, 2, MPG123.SBLIMIT * MPG123.SSLIMIT);
+            internal float[][][] hybrid_block = null;
 
             internal int num_frames; // set if vbr header present
 

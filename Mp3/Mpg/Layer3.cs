@@ -2719,6 +2719,9 @@ namespace GroovyCodecs.Mp3.Mpg
 
         private void III_hybrid(MPGLib.mpstr_tag mp, float[] fsIn, float[] tsOut, int ch, MPG123.gr_info_s gr_infos)
         {
+            if (mp.hybrid_block == null)
+                mp.hybrid_block = Arrays.ReturnRectangularArray<float>(2, 2, MPG123.SBLIMIT * MPG123.SSLIMIT);
+            
             var tspnt = tsOut;
             var tspntPos = 0;
             var block = mp.hybrid_block;

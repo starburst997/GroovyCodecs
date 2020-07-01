@@ -187,7 +187,7 @@ namespace GroovyCodecs.Mp3.Mpg
             }
         };
 
-        internal float[][] muls = Arrays.ReturnRectangularArray<float>(27, 64);
+        static internal float[][] muls = Arrays.ReturnRectangularArray<float>(27, 64);
 
         internal bool head_check(long head, int check_layer)
         {

@@ -979,6 +979,11 @@ namespace GroovyCodecs.Mp3.Mp3
 
         internal void mdct_sub48(LameInternalFlags gfc, float[] w0, float[] w1)
         {
+            if (gfc.sb_sample == null)
+            {
+                gfc.sb_sample = Arrays.ReturnRectangularArray<float>(2, 2, 18, Encoder.SBLIMIT);
+            }
+            
             var wk = w0;
             var wkPos = 286;
             for (var ch = 0; ch < gfc.channels_out; ch++)

@@ -422,6 +422,8 @@ namespace GroovyCodecs.Mp3.Mp3
 
         }
 
+        private bool _firstCall = true; 
+
         internal int lame_encode_mp3_frame(
             LameGlobalFlags gfp,
             float[] inbuf_l,
@@ -432,6 +434,22 @@ namespace GroovyCodecs.Mp3.Mp3
         {
             int mp3count;
 
+            if (_firstCall)
+            {
+                _firstCall = false;
+                qupvt.iteration_init(gfp);
+            }
+            
+            if (gfp.internal_flags.nb_1 == null)
+            {
+                gfp.internal_flags.nb_1 = Arrays.ReturnRectangularArray<float>(4, Encoder.CBANDS);
+                gfp.internal_flags.nb_2 = Arrays.ReturnRectangularArray<float>(4, Encoder.CBANDS);
+                gfp.internal_flags.nb_s1 = Arrays.ReturnRectangularArray<float>(4, Encoder.CBANDS);
+                gfp.internal_flags.nb_s2 = Arrays.ReturnRectangularArray<float>(4, Encoder.CBANDS);
+                
+                psy.psymodel_init(gfp);
+            }
+            
             var masking_LR = Arrays.ReturnRectangularArray<III_psy_ratio>(2, 2); /*
 																	 * LR masking &
 																	 * energy

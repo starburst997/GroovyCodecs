@@ -847,6 +847,35 @@ namespace GroovyCodecs.Mp3.Mp3
             }
             else if (gi.block_type == Encoder.NORM_TYPE)
             {
+                if (gfc.bv_scf == null)
+                {
+                    gfc.bv_scf = new int[576];
+                    
+                    for (var j = 2; j <= 576; j += 2)
+                    {
+                        int scfb_anz = 0, bv_index;
+                        while (gfc.scalefac_band.l[++scfb_anz] < j)
+                            ;
+
+                        bv_index = subdv_table[scfb_anz][0];
+                        while (gfc.scalefac_band.l[bv_index + 1] > j)
+                            bv_index--;
+
+                        if (bv_index < 0)
+                            bv_index = subdv_table[scfb_anz][0];
+
+                        gfc.bv_scf[j - 2] = bv_index;
+                        bv_index = subdv_table[scfb_anz][1];
+                        while (gfc.scalefac_band.l[bv_index + gfc.bv_scf[j - 2] + 2] > j)
+                            bv_index--;
+
+                        if (bv_index < 0)
+                            bv_index = subdv_table[scfb_anz][1];
+
+                        gfc.bv_scf[j - 1] = bv_index;
+                    }
+                }
+                
                 Debug.Assert(i <= 576);
                 a1 = gi.region0_count = gfc.bv_scf[i - 2];
                 a2 = gi.region1_count = gfc.bv_scf[i - 1];
@@ -1390,29 +1419,7 @@ namespace GroovyCodecs.Mp3.Mp3
 
         internal virtual void huffman_init(LameInternalFlags gfc)
         {
-            for (var i = 2; i <= 576; i += 2)
-            {
-                int scfb_anz = 0, bv_index;
-                while (gfc.scalefac_band.l[++scfb_anz] < i)
-                    ;
-
-                bv_index = subdv_table[scfb_anz][0];
-                while (gfc.scalefac_band.l[bv_index + 1] > i)
-                    bv_index--;
-
-                if (bv_index < 0)
-                    bv_index = subdv_table[scfb_anz][0];
-
-                gfc.bv_scf[i - 2] = bv_index;
-                bv_index = subdv_table[scfb_anz][1];
-                while (gfc.scalefac_band.l[bv_index + gfc.bv_scf[i - 2] + 2] > i)
-                    bv_index--;
-
-                if (bv_index < 0)
-                    bv_index = subdv_table[scfb_anz][1];
-
-                gfc.bv_scf[i - 1] = bv_index;
-            }
+            
         }
     }
 }

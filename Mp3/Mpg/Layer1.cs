@@ -136,14 +136,14 @@ namespace GroovyCodecs.Mp3.Mpg
                     n = balloc[ba++];
                     if (n != 0)
                         fraction[0][f0++] = ((-1 << n) + smpb[sample++] + 1) *
-                                            common.muls[n + 1][scale_index[sca++]];
+                                            Common.muls[n + 1][scale_index[sca++]];
                     else
                         fraction[0][f0++] = 0.0f;
 
                     n = balloc[ba++];
                     if (n != 0)
                         fraction[1][f1++] = ((-1 << n) + smpb[sample++] + 1) *
-                                            common.muls[n + 1][scale_index[sca++]];
+                                            Common.muls[n + 1][scale_index[sca++]];
                     else
                         fraction[1][f1++] = 0.0f;
                 }
@@ -154,8 +154,8 @@ namespace GroovyCodecs.Mp3.Mpg
                     if (n != 0)
                     {
                         var samp = (float)((-1 << n) + smpb[sample++] + 1);
-                        fraction[0][f0++] = samp * common.muls[n + 1][scale_index[sca++]];
-                        fraction[1][f1++] = samp * common.muls[n + 1][scale_index[sca++]];
+                        fraction[0][f0++] = samp * Common.muls[n + 1][scale_index[sca++]];
+                        fraction[1][f1++] = samp * Common.muls[n + 1][scale_index[sca++]];
                     }
                     else
                     {
@@ -183,7 +183,7 @@ namespace GroovyCodecs.Mp3.Mpg
                     n = balloc[ba++];
                     if (n != 0)
                         fraction[0][f0++] = ((-1 << n) + smpb[sample++] + 1) *
-                                            common.muls[n + 1][scale_index[sca++]];
+                                            Common.muls[n + 1][scale_index[sca++]];
                     else
                         fraction[0][f0++] = 0.0f;
                 }

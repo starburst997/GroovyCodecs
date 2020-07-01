@@ -647,8 +647,11 @@ namespace GroovyCodecs.Mp3.Mp3
             NumUsed num_used,
             int ch)
         {
-
             var gfc = gfp.internal_flags;
+
+            if (gfc.blackfilt == null)
+                gfc.blackfilt = new float[2 * LameInternalFlags.BPC + 1][];
+            
             int i, j = 0, k;
             var bpc = gfp.out_samplerate / gcd(gfp.out_samplerate, gfp.in_samplerate);
             if (bpc > LameInternalFlags.BPC)
@@ -1306,8 +1309,8 @@ namespace GroovyCodecs.Mp3.Mp3
             if (gfp.VBR == VbrMode.vbr_off)
                 gfc.slot_lag = gfc.frac_SpF = (int)((gfp.version + 1) * 72000L * gfp.brate % gfp.out_samplerate);
 
-            qupvt.iteration_init(gfp);
-            psy.psymodel_init(gfp);
+            //qupvt.iteration_init(gfp);
+            //psy.psymodel_init(gfp);
 
             _set = true;
             
@@ -1407,6 +1410,11 @@ namespace GroovyCodecs.Mp3.Mp3
                     in_buffer[1][i] = 0.0f;
                 }
 
+            if (gfc.mfbuf == null)
+            {
+                gfc.mfbuf = Arrays.ReturnRectangularArray<float>(2, LameInternalFlags.MFSIZE);
+            }
+            
             mf_needed = calcNeeded(gfp);
             mfbuf[0] = gfc.mfbuf[0];
             mfbuf[1] = gfc.mfbuf[1];
