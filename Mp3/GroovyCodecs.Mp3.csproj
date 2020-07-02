@@ -8,7 +8,11 @@
     <Description>A C# native implementation of an MP3 encoder / decoder, based on LAME and Jump3r.</Description>
     <PackageId>GroovyMp3</PackageId>
     <IsPackable>false</IsPackable>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
