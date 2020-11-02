@@ -55,20 +55,20 @@ namespace GroovyCodecs.Mp3
         ///     property key to read/set the bitrate: an Integer value. Set to -1 for
         ///     default bitrate.
         /// </summary>
-        public const string P_BITRATE = "bitrate";
+        public static readonly string P_BITRATE = "bitrate";
 
         /// <summary>
         ///     property key to read/set the channel mode: a String, one of
         ///     &quot;jointstereo&quot;, &quot;dual&quot;, &quot;mono&quot;,
         ///     &quot;auto&quot; (default).
         /// </summary>
-        public const string P_CHMODE = "chmode";
+        public static readonly string P_CHMODE = "chmode";
 
         /// <summary>
         ///     property key to read/set the quality: an Integer from 1 (highest) to 9
         ///     (lowest).
         /// </summary>
-        public const string P_QUALITY = "quality";
+        public static readonly string P_QUALITY = "quality";
 
         /*
         public static readonly WaveFormatEncoding MPEG1L3 = new AudioFormat.Encoding("MPEG1L3");
@@ -82,7 +82,7 @@ namespace GroovyCodecs.Mp3
         ///     property key to read/set the VBR mode: an instance of Boolean (default:
         ///     false)
         /// </summary>
-        public const string P_VBR = "vbr";
+        public static readonly string P_VBR = "vbr";
 
         public const int QUALITY_HIGH = 2;
 
